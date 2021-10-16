@@ -29,8 +29,8 @@ class BoundingBox:
 @dataclass
 class Tiling_Action:
     
-    corner: Corner = Corner.NO
     ratio: str
+    corner: Corner = field(default=Corner.NO)
     rel_to_tile : int = -1
     displacement: float = 0.0
     add_to_x_ext: float = 0.0
@@ -123,27 +123,19 @@ class Tiling:
             return (pos[0], pos[1] + self.distance)
         elif to_which == Corner.LR:
             return pos
-        else:
+        elif to_which == Corner.UR:
             return (pos[0] + self.distance, pos[1])
+        else:
+            return (0.0, 0.0)
 
     def add(self, tiles, start_position, tiling_program):
 
         local_tile_list = []
-        instr = tiling_program[0]
-        fname = tiles.select (instr.ratio)
-        x_ext = float(instr.ratio.split(':')[0])
-        y_ext = float(instr.ratio.split(':')[1])
-        t = Tile(ulx=start_position[0],
-                 uly=start_position[1],
-                 x_ext=x_ext * self.size + self.distance * instr.add_to_x_ext,
-                 y_ext=y_ext * self.size + self.distance * instr.add_to_y_ext,
-                 filename=fname)
-        local_tile_list.append(t)
-        for i, instr in enumerate(tiling_program[1:]):
-            idx = 1 + i + instr.rel_to_tile if instr.rel_to_tile < 0 else instr.rel_to_tile
-            print ('Index', i, idx)
-            start_x, start_y = self.add_dist(local_tile_list[idx].corner(instr.corner), instr.corner)
-            #print (start_x, start_y)
+        for i, instr in enumerate(tiling_program):
+            idx = i + instr.rel_to_tile if instr.rel_to_tile < 0 else instr.rel_to_tile
+            #print ('Index', i, idx)
+            start_x, start_y = start_position if len(local_tile_list) == 0 else self.add_dist(local_tile_list[idx].corner(instr.corner), instr.corner)
+            #print ("add", start_x, start_y)
             ### TBD handle displacement
             x_ext = float(instr.ratio.split(':')[0])
             y_ext = float(instr.ratio.split(':')[1])
@@ -152,57 +144,72 @@ class Tiling:
                      uly=start_y,
                      x_ext=x_ext * self.size + self.distance * instr.add_to_x_ext,
                      y_ext=y_ext * self.size + self.distance * instr.add_to_y_ext,
-                     #x_ext=x_ext * self.size + (self.distance if instr.add_to_x_ext else 0),
-                     #y_ext=y_ext * self.size + (self.distance if instr.add_to_y_ext else 0),
-                     #x_ext=x_ext * self.size,
-                     #y_ext=y_ext * self.size,
                      filename=fname)
             local_tile_list.append(t)
+
         self.tile_list += local_tile_list
 
-    def calc_bb__(self):
+    def calc_bb(self):
         uls = [t.ul for t in self.tile_list]
         lrs = [t.lr for t in self.tile_list]
         self.bb.ulx, self.bb.uly = min(uls)
         self.bb.lrx, self.bb.lry = max(lrs)
 
     def shift(self, to_point):
-        self.calc_bb__()
-        print ("Shift", self.bb)
+        self.calc_bb()
+        print ("before shift", self.bb, to_point)
+        dx = to_point[0] - self.bb.ulx
+        dy = to_point[1] - self.bb.uly
         for tile in self.tile_list:
-            pass
+            tile.ulx += dx
+            tile.uly += dy
+        self.calc_bb()
+        print ("after shift", self.bb)
 
     def generate(self, tiles):
         pass 
         
 
-class Tiling_Of_Tiligs:
+class Tiling_Of_Tilings:
 
     def __init__(self, distance):
 
         self.distance = distance
         self.list_of_tilings = []
 
-    def add(self, tilings, pred, corner=None):
+    def add_dist(self, idx, to_which):
 
+        bb = self.list_of_tilings[idx].bb
 
+        if to_which == Corner.UL:
+            return bb
+        elif to_which == Corner.LL:
+            return (bb.ulx,  bb.lry + self.distance)
+        elif to_which == Corner.LR:
+            return bb
+        elif to_which == Corner.UR:
+            return (bb.lrx + self.distance, bb.uly)
+        else:
+            return (0.0, 0.0)
 
-    #def select__(self, from_list):
-    #    i = ra.randint(0, len(from_list) - 1)
-    #    elem = from_list[i]
-    #    del from_list[i]
-    #    return elem
+    def add(self, tilings, tiling_program):
+        for i, tiling in enumerate(tilings):
+            instr = tiling_program[i]
+            tiling.calc_bb()
+            idx = i + instr.rel_to_tile if instr.rel_to_tile < 0 else instr.rel_to_tile
+            start_point = (tiling.bb.ulx, tiling.bb.uly) if len(self.list_of_tilings) == 0 else self.add_dist(idx, instr.corner)
+            tiling.shift(start_point)
+            self.list_of_tilings.append(tiling)
 
-    def gen(self, squares, rects_lying, rects_standing):
-        r = self.select__(rects_standing)
-        self.add(0.0, 0.0)
+    def generate(self, tiling_gen):
+        for tiling in self.list_of_tilings:
+            tiling_gen.generate(tiling)
+        tiling_gen.save()
 
-        pass
 
 class SVG_Tiling_Generator:
 
     def __init__(self, fname):
-        pass
         self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
 
     def generate(self, tiling):
@@ -219,28 +226,29 @@ class SVG_Tiling_Generator:
 
 
         for tile in tiling.tile_list:
-            print (tile)
+            #print (tile)
             img = make_image(tile.base64_data, tile.ul, tile.ext)
             self.dwg.add (img)
 
+    def save(self):
         self.dwg.save()
 
 
 if __name__ == '__main__':
     #t = Tile(ulx=0.0,uly=0.0, ext_x=50.0, ext_y=50.0)
     tp = [
-            Tiling_Action(Corner.UR, '2:1', add_to_x_ext=1),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.UR, '1:2', add_to_y_ext=1),
-            Tiling_Action(Corner.LL, '1:1', rel_to_tile=0),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.LL, '1:2', rel_to_tile=3, add_to_y_ext=1),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.UR, '1:1'),
-            Tiling_Action(Corner.LL, '1:1', rel_to_tile=7),
-            Tiling_Action(Corner.UR, '2:1', add_to_x_ext=1)
+            Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.UR, ratio='1:2', add_to_y_ext=1),
+            Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=0),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.LL, ratio='1:2', rel_to_tile=3, add_to_y_ext=1),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.UR, ratio='1:1'),
+            Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=7),
+            Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1)
     ]
 
     collection = Tile_Collection()
@@ -250,11 +258,33 @@ if __name__ == '__main__':
     collection['2:1'] = glob.glob('D:\\Projects\\NoOrdinaryExes\\2_1\\*.jpg')
     #print (collection.keys())
 
-    tiling  = My_Tiling(50, 3)
-    tiling.add(collection, (0.0, 0.0), tp)
+    tiling  = Tiling(50, 3)
+    tilings = [
+                Tiling(50, 3),
+                Tiling(50, 3),
+                Tiling(50, 3),
+                Tiling(50, 3),
+                Tiling(100, 3),
+    ]
+
+    tot_p = [
+        Tiling_Action(corner=Corner.NO, ratio='1:1'),
+        Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=0),
+        Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        Tiling_Action(corner=Corner.UR, ratio='1:1', rel_to_tile=1),
+    ]
+
+    t_o_t = Tiling_Of_Tilings(3)
+    for t in tilings:
+        t.add(collection, (10.0, 10.0), tp)
+
+    t_o_t.add(tilings, tot_p)
     #print (tiling.tile_list)
 
     gen = SVG_Tiling_Generator('D:\\Projects\\NoOrdinaryExes\\Poster\\Poster.svg')
+    t_o_t.generate(gen)
 
-    gen.generate(tiling)
-    tiling.shift((10, 10))
+    #gen.generate(tiling)
+    #gen.save()
+    #tiling.shift((10, 10))
