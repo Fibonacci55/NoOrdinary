@@ -7,6 +7,8 @@ from collections import UserDict
 import glob
 import svgwrite
 from math import floor
+from wand.image import Image
+import datetime
 
 class Corner(Enum):
     NO = 0
@@ -46,11 +48,23 @@ class Tile:
     filename: str
     base64_data: str = None
 
+    #def __post_init__(self):
+    #    f = open(self.filename, 'rb')
+    #    buffer = bytearray(f.read())
+    #    self.base64_data = base64.b64encode(buffer).decode('ASCII')
+    #    f.close()
+
     def __post_init__(self):
-        f = open(self.filename, 'rb')
-        buffer = bytearray(f.read())
-        self.base64_data = base64.b64encode(buffer).decode('ASCII')
-        f.close()
+        infile = open(self.filename, 'rb')
+        print (self.filename)
+        with Image(file=infile) as img:
+            width = img.width
+            height = img.height
+            if self.x_ext > self.y_ext:
+                img.liquid_rescale(floor(width), floor(height*0.96))
+            elif self.x_ext < self.y_ext:
+                img.liquid_rescale(floor(width*0.96), floor(height*1.0))
+            self.base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
 
     def corner(self, which):
         if which == Corner.UL:
@@ -235,6 +249,8 @@ class SVG_Tiling_Generator:
 
 
 if __name__ == '__main__':
+
+    ra.seed(1234567)
     #t = Tile(ulx=0.0,uly=0.0, ext_x=50.0, ext_y=50.0)
     tp = [
             Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1),
@@ -259,13 +275,15 @@ if __name__ == '__main__':
     #print (collection.keys())
 
     tiling  = Tiling(50, 3)
-    tilings = [
-                Tiling(50, 3),
-                Tiling(50, 3),
-                Tiling(50, 3),
-                Tiling(50, 3),
-                Tiling(100, 3),
-    ]
+    #tilings = [
+    #            Tiling(50, 3),
+    #            Tiling(50, 3),
+    #            Tiling(50, 3),
+    #            Tiling(50, 3),
+    #            Tiling(100, 3),
+    #]
+    tilings = [Tiling(45, 3) for i in range(0, 4)]
+    tilings.append(Tiling(90, 3))
 
     tot_p = [
         Tiling_Action(corner=Corner.NO, ratio='1:1'),
@@ -282,7 +300,7 @@ if __name__ == '__main__':
     t_o_t.add(tilings, tot_p)
     #print (tiling.tile_list)
 
-    gen = SVG_Tiling_Generator('D:\\Projects\\NoOrdinaryExes\\Poster\\Poster.svg')
+    gen = SVG_Tiling_Generator('D:\\Projects\\NoOrdinaryExes\\Poster\\Poster_{:%Y_%m_%d_%H_%M_%S}.svg'.format(datetime.datetime.now()))
     t_o_t.generate(gen)
 
     #gen.generate(tiling)
