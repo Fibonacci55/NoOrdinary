@@ -46,7 +46,7 @@ class Tile:
     x_ext: float
     y_ext: float
     filename: str
-    base64_data: str = None
+    #base64_data: str = None
 
     #def __post_init__(self):
     #    f = open(self.filename, 'rb')
@@ -54,17 +54,17 @@ class Tile:
     #    self.base64_data = base64.b64encode(buffer).decode('ASCII')
     #    f.close()
 
-    def __post_init__(self):
-        infile = open(self.filename, 'rb')
-        print (self.filename)
-        with Image(file=infile) as img:
-            width = img.width
-            height = img.height
-            if self.x_ext > self.y_ext:
-                img.liquid_rescale(floor(width), floor(height*0.96))
-            elif self.x_ext < self.y_ext:
-                img.liquid_rescale(floor(width*0.96), floor(height*1.0))
-            self.base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+    #def __post_init__(self):
+    #    infile = open(self.filename, 'rb')
+    #    print (self.filename)
+    #    with Image(file=infile) as img:
+    #        width = img.width
+    #        height = img.height
+    #        if self.x_ext > self.y_ext:
+    #            img.liquid_rescale(floor(width), floor(height*0.96))
+    #        elif self.x_ext < self.y_ext:
+    #            img.liquid_rescale(floor(width*0.96), floor(height*1.0))
+    #        self.base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
 
     def corner(self, which):
         if which == Corner.UL:
@@ -107,6 +107,7 @@ class Tile_Collection(UserDict):
     def select(self, selector):
         #print ('select', selector)
         #print(self.data[selector])
+        print (len(self.data))
         if selector in self.data:
             i = ra.randint(0, len(self.data[selector]) - 1)
             res = self.data[selector][i]
@@ -115,6 +116,7 @@ class Tile_Collection(UserDict):
                 del self.data[selector]
             return res
         else:
+            print ("select", selector)
             raise KeyError
 
 
@@ -124,9 +126,10 @@ class Tiling:
 
     """
 
-    def __init__(self, size, distance=0.0):
+    def __init__(self, size, corr_fac, distance=0.0):
         self.size = size
         self.distance = distance
+        self.corr_fac = corr_fac
         self.tile_list = []
         self.bb = BoundingBox (ulx=0.0, uly=0.0, lrx=0.0, lry=0.0)
 
@@ -227,21 +230,32 @@ class SVG_Tiling_Generator:
         self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
 
     def generate(self, tiling):
-        def make_image (data, pos, size):
-            x = "%smm" % floor(pos[0])
-            y = "%smm" % floor(pos[1])
-            #print ((x, y))
+        def make_image (tile, corr_fac):
 
-            x_ext = "%smm" % size[0]
-            y_ext = "%smm" % size[1]
-            img_data = "data:image/jpg;base64," + data
+            x = "%smm" % floor(tile.ulx)
+            y = "%smm" % floor(tile.uly)
+            x_ext = "%smm" % tile.x_ext
+            y_ext = "%smm" % tile.y_ext
+
+            infile = open(tile.filename, 'rb')
+            print(tile.filename)
+            with Image(file=infile) as img:
+                width = img.width
+                height = img.height
+                if x_ext > y_ext:
+                    img.liquid_rescale(width, floor(height * corr_fac))
+                elif x_ext < y_ext:
+                    img.liquid_rescale(floor(width * corr_fac), height)
+                base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+
+            img_data = "data:image/jpg;base64," + base64_data
             img = svgwrite.image.Image(img_data, insert=(x, y), size=(x_ext, y_ext))
             return img
 
 
         for tile in tiling.tile_list:
             #print (tile)
-            img = make_image(tile.base64_data, tile.ul, tile.ext)
+            img = make_image(tile, tiling.corr_fac)
             self.dwg.add (img)
 
     def save(self):
@@ -252,7 +266,7 @@ if __name__ == '__main__':
 
     ra.seed(1234567)
     #t = Tile(ulx=0.0,uly=0.0, ext_x=50.0, ext_y=50.0)
-    tp = [
+    tp_full = [
             Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1),
             Tiling_Action(corner=Corner.UR, ratio='1:1'),
             Tiling_Action(corner=Corner.UR, ratio='1:2', add_to_y_ext=1),
@@ -267,11 +281,20 @@ if __name__ == '__main__':
             Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1)
     ]
 
+    tp_half = [
+        Tiling_Action(corner=Corner.NO, ratio='1:2', add_to_y_ext=1),
+        Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=1),
+        Tiling_Action(corner=Corner.UR, ratio='2:1', add_to_x_ext=1)
+    ]
+
     collection = Tile_Collection()
     #D:\\Projects\\NoOrdinaryExes\\1_1
-    collection['1:1'] = glob.glob('D:\\Projects\\NoOrdinaryExes\\1_1\\*.jpg')
-    collection['1:2'] = glob.glob('D:\\Projects\\NoOrdinaryExes\\1_2\\*.jpg')
-    collection['2:1'] = glob.glob('D:\\Projects\\NoOrdinaryExes\\2_1\\*.jpg')
+    collection['1:1'] = glob.glob('D:\\Projects\\NoOrdinaryEyes\\1_1_selected\\*.jpg')
+    collection['1:2'] = glob.glob('D:\\Projects\\NoOrdinaryEyes\\1_2_selected\\*.jpg')
+    collection['2:1'] = glob.glob('D:\\Projects\\NoOrdinaryEyes\\2_1_selected\\*.jpg')
     #print (collection.keys())
 
     tiling  = Tiling(50, 3)
@@ -282,25 +305,36 @@ if __name__ == '__main__':
     #            Tiling(50, 3),
     #            Tiling(100, 3),
     #]
-    tilings = [Tiling(45, 3) for i in range(0, 4)]
-    tilings.append(Tiling(90, 3))
+    distance = 3
+    #tilings = [Tiling(45,  corr_fac=0.96, distance=distance) for i in range(0, 4)]
+    tilings = []
+    #tilings.append(Tiling(93, corr_fac=1.02, distance=distance))
+    #tilings.append(Tiling(93, corr_fac=1.02, distance=distance))
+    #tilings += [Tiling(45,  corr_fac=0.96, distance=distance) for i in range(0, 4)]
+    tilings += [Tiling(93,  corr_fac=1.02, distance=distance) for i in range(0, 6)]
 
     tot_p = [
         Tiling_Action(corner=Corner.NO, ratio='1:1'),
         Tiling_Action(corner=Corner.UR, ratio='1:1'),
         Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=0),
         Tiling_Action(corner=Corner.UR, ratio='1:1'),
-        Tiling_Action(corner=Corner.UR, ratio='1:1', rel_to_tile=1),
+        Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=2),
+        Tiling_Action(corner=Corner.UR, ratio='1:1', rel_to_tile=4),
+        #Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        #Tiling_Action(corner=Corner.UR, ratio='1:1'),
+        #Tiling_Action(corner=Corner.LL, ratio='1:1', rel_to_tile=7),
+        #Tiling_Action(corner=Corner.UR, ratio='1:1'),
     ]
 
-    t_o_t = Tiling_Of_Tilings(3)
-    for t in tilings:
-        t.add(collection, (10.0, 10.0), tp)
+    t_o_t = Tiling_Of_Tilings(distance)
+    #tilings[0].add(collection, (45.0, 10), tp_half)
+    for t in tilings[:]:
+        t.add(collection, (45.0, 25.0), tp_full)
 
-    t_o_t.add(tilings, tot_p)
+    t_o_t.add(tilings[:], tot_p)
     #print (tiling.tile_list)
 
-    gen = SVG_Tiling_Generator('D:\\Projects\\NoOrdinaryExes\\Poster\\Poster_{:%Y_%m_%d_%H_%M_%S}.svg'.format(datetime.datetime.now()))
+    gen = SVG_Tiling_Generator('D:\\Projects\\NoOrdinaryEyes\\Poster\\Poster_{:%Y_%m_%d_%H_%M_%S}.svg'.format(datetime.datetime.now()))
     t_o_t.generate(gen)
 
     #gen.generate(tiling)
