@@ -11,6 +11,9 @@ from wand.image import Image
 import datetime
 
 class Corner(Enum):
+    """
+
+    """
     NO = 0
     UL = 1
     UR = 2
