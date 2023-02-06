@@ -1,6 +1,7 @@
 import base64
 import random as ra
 from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
 
 from svgwrite.extensions import Inkscape
 import svgwrite
@@ -29,9 +30,43 @@ def make_image(fname, image):
 
     dwg.save()
 
+
 @dataclass
-class B:
+class B(ABC):
     x: str = field(init=False)
+
+class Tile_Selector(ABC):
+
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def __call__(self, from_list):
+        pass
+
+class Random_Selector(Tile_Selector):
+
+    def __call__(self, from_list):
+        v = ra.choice (from_list)
+        from_list.remove (v)
+        return v
+
+class Ordered_Selector(Tile_Selector):
+
+    def __call__(self, from_list):
+        v = from_list.pop(0)
+
+def bla (sel=Ordered_Selector()):
+    print (sel.__class__)
+
+
+class X:
+
+    def __init__(self):
+        pass
+
+    def do(self):
+        self.xxx = 'Done'
 
 if __name__ == '__main__':
     pass
@@ -42,3 +77,8 @@ if __name__ == '__main__':
     #make_image(outf_name, img_href)
     b = B()
     b.x = 'xxx'
+
+    x = X()
+    x.do()
+
+    print(x.xxx)
