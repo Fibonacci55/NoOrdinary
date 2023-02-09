@@ -62,11 +62,17 @@ def bla (sel=Ordered_Selector()):
 
 class X:
 
-    def __init__(self):
+    def G__init__(self):
         pass
 
     def do(self):
         self.xxx = 'Done'
+
+#from copy import deepcopy
+
+def bla(l):
+
+    l[0] += 3
 
 if __name__ == '__main__':
     pass
@@ -75,10 +81,11 @@ if __name__ == '__main__':
     #img = encode(fname)
     #img_href = "data:image/jpg;base64," + img.decode('ASCII')
     #make_image(outf_name, img_href)
-    b = B()
-    b.x = 'xxx'
 
-    x = X()
-    x.do()
+    import tilings as tp
 
-    print(x.xxx)
+    p = tp.Pine_Heel().clone()
+    p = tp.Pine_Heel().clone(shift_vec=(1,0))
+    p = tp.Pine_Heel().clone(scale=10)
+    p = tp.Pine_Heel().clone(scale=10, distance=10)
+    p = tp.Pine_Heel().clone(scale=10, shift_vec=(1,0), distance=10)

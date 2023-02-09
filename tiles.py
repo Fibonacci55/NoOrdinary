@@ -32,6 +32,7 @@ class Tile:
     uly: float
     x_ext: float
     y_ext: float
+    selector: str
 
     def corner(self, which):
         if which == Corner.UL:
@@ -69,3 +70,8 @@ class Tile:
 @dataclass
 class Image_Tile (Tile):
     filename: str
+
+def tiles2image_tiles (tile_list, collection):
+
+    for tile in tile_list:
+
