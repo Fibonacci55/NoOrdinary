@@ -2,6 +2,9 @@
 from tiles import Tile
 from copy import deepcopy
 from dataclasses import dataclass, field
+from enum import Enum
+
+
 
 @dataclass
 class Position:
@@ -38,46 +41,73 @@ class BoundingBox:
 
 
 
-class Tiling:
 
-    def __init__(self, l):
-        self.tiles = l
+def calc_bb(tile_list):
+    uls = [t.ul for t in tile_list]
+    lrs = [t.lr for t in tile_list]
+    ulx, uly = min(uls)
+    lrx, lry = max(lrs)
+    return BoundingBox(ulx=ulx, uly=uly, lrx=lrx, lry=lry)
 
-    def __calc_bb(self):
-        uls = [t.ul for t in self.tiles]
-        lrs = [t.lr for t in self.tiles]
-        ulx, uly = min(uls)
-        lrx, lry = max(lrs)
-        return BoundingBox(ulx=ulx, uly=uly, lrx=lrx, lry=lry)
 
-    def __transform(self, tile_list, scale= 1, shift_vec = (0, 0)):
-        """
+def scale(tile_list, factor):
+    """
 
-        :param shift_vec: Shifts the complete tiling about the vector
-        :return:
-        """
-        bb = self.__calc_bb()
-        #print ("before shift", bb)
-        #dx = to_point[0] - self.bb.ulx
-        #dy = to_point[1] - self.bb.uly
+    :param tile_list:
+    :param factor:
+    :return:
+    """
+    for tile in tile_list:
+        tile.ulx *= factor
+        tile.uly *= factor
+        tile.x_ext *= factor
+        tile.y_ext *= factor
 
-        ### Shift with Vector!!
+def shift(tile_list, to_pos):
+    pass
 
-        dx = shift_vec[0] * bb.lrx * scale
-        dy = shift_vec[1] * bb.lry * scale
+def join_tilings(tiling_collection, name, join_description):
+    """
 
-        #print ('dx dy', dx, dy)
+    :param name: Name of tiling
+    :param join_description: String formed as NxM
+    :return: A tiling list forming NxM identical tilings
+    """
+    rs, cs = join_description.split ('x')
+    rows = int(rs)
+    columns = int(cs)
 
-        for tile in tile_list:
-            tile.ulx *= scale
-            tile.ulx += dx
-            tile.uly *= scale
-            tile.uly += dy
-            tile.x_ext *= scale
-            tile.y_ext *= scale
+    #for
 
-        bb = self.__calc_bb()
-        #print ("after shift", bb)
+
+def transform(tile_list, scale=1, shift_vec=(0,0), to_pos=(0, 0)):
+    """
+
+    :param self_shift_vec: Shifts the complete tiling about the vector
+    :return:
+    """
+    bb = calc_bb(tile_list)
+    #print ("before shift", bb)
+    #dx = to_point[0] - self.bb.ulx
+    #dy = to_point[1] - self.bb.uly
+
+    ### Shift with Vector!!
+
+    dx = shift_vec[0] * bb.lrx * scale
+    dy = shift_vec[1] * bb.lry * scale
+
+    #print ('dx dy', dx, dy)
+
+    for tile in tile_list:
+        tile.ulx *= scale
+        tile.ulx += dx
+        tile.uly *= scale
+        tile.uly += dy
+        tile.x_ext *= scale
+        tile.y_ext *= scale
+
+    bb = calc_bb()
+    #print ("after shift", bb)
 
     def __add_distance(self, to_tile_list, distance, x_shifted=False, y_shifted=False):
 
@@ -103,17 +133,10 @@ class Tiling:
         print (l)
         return l
 
-class Pine_Heel(Tiling):
-    """
-        Selectors:
-            - 1:1
-            - 2:1
-            - 1:2
-    """
-    selectors = ['2:1', '1:2', '1:1']
 
-    def __init__(self):
-        tiles = [
+tilings = {
+    'Pine_Heel' :
+        [
             Tile(selector='2:1', ulx=0, uly=0, x_ext=2, y_ext=1),
             Tile(selector='1:1', ulx=2, uly=0, x_ext=1, y_ext=1),
             Tile(selector='1:2', ulx=3, uly=0, x_ext=1, y_ext=2),
@@ -125,6 +148,6 @@ class Pine_Heel(Tiling):
             Tile(selector='1:1', ulx=2, uly=2, x_ext=1, y_ext=1),
             Tile(selector='1:1', ulx=3, uly=2, x_ext=1, y_ext=1),
             Tile(selector='2:1', ulx=2, uly=3, x_ext=2, y_ext=1),
-        ]
-        super().__init__(tiles)
+        ],
+}
 

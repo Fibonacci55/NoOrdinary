@@ -74,4 +74,4 @@ class Image_Tile (Tile):
 def tiles2image_tiles (tile_list, collection):
 
     for tile in tile_list:
-
+        pass

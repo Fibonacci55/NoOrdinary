@@ -11,7 +11,7 @@ class SVG_Tiling_Generator:
         """
 
         :param fname: Name of file to generated
-        :param tile_collection: Collection of pictures to be used as tiles
+        :param tile_collection: Collection of pictures to be used as tile_list
         :param size: Base size in mm of one logical unit
         :param distance: Distance between two adjacent pictures in resulting tiling
         :param corr_factor: Heuristic for correcting the dimension of picture using
