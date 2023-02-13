@@ -2,47 +2,13 @@
 from tiles import Tile
 from copy import deepcopy
 from dataclasses import dataclass, field
-from enum import Enum
+from tile_common import Position, Corner, BoundingBox
+
+import typing
 
 
 
-@dataclass
-class Position:
-    """
-        Position in "normalized" ccordinates where to put the
-        respective tile
-    """
-    x : int
-    y : int
-
-class Corner(Enum):
-    """
-        Enum type of four corners of a rectangular tile
-    """
-    NO = 0
-    UL = 1
-    UR = 2
-    LL = 3
-    LR = 4
-
-
-@dataclass
-class BoundingBox:
-    """
-        Bounding box of a rectangular tile
-    """
-    ulx: float
-    uly: float
-    lrx: float
-    lry: float
-
-    def __str__(self):
-        return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.lry, self.lry)
-
-
-
-
-def calc_bb(tile_list):
+def calc_bb(tile_list : list[Tile]) -> BoundingBox:
     uls = [t.ul for t in tile_list]
     lrs = [t.lr for t in tile_list]
     ulx, uly = min(uls)
@@ -109,29 +75,29 @@ def transform(tile_list, scale=1, shift_vec=(0,0), to_pos=(0, 0)):
     bb = calc_bb()
     #print ("after shift", bb)
 
-    def __add_distance(self, to_tile_list, distance, x_shifted=False, y_shifted=False):
+def add_distance(self, to_tile_list, distance, x_shifted=False, y_shifted=False):
 
-        for tile in to_tile_list:
-            if tile.ulx == 0 and x_shifted:
-                tile.ulx += distance
-            if tile.uly == 0 and y_shifted:
-                tile.uly += distance
-            if tile.ulx > 0:
-                tile.ulx += distance
-            if tile.uly > 0:
-                tile.uly += distance
+    for tile in to_tile_list:
+        if tile.ulx == 0 and x_shifted:
+            tile.ulx += distance
+        if tile.uly == 0 and y_shifted:
+            tile.uly += distance
+        if tile.ulx > 0:
+            tile.ulx += distance
+        if tile.uly > 0:
+            tile.uly += distance
 
-    def clone(self, scale=1, shift_vec=(0,0), distance=0):
-        l = deepcopy(self.tiles)
-        #print (l)
-        self.__transform(l, scale=scale, shift_vec=shift_vec)
-        if distance > 0:
-            self.__add_distance (l, distance,
-                                 x_shifted=shift_vec[0]>0,
-                                 y_shifted=shift_vec[1]>0
-                                )
-        print (l)
-        return l
+def clone(self, scale=1, shift_vec=(0,0), distance=0):
+    l = deepcopy(self.tiles)
+    #print (l)
+    self.__transform(l, scale=scale, shift_vec=shift_vec)
+    if distance > 0:
+        self.add_distance (l, distance,
+                           x_shifted=shift_vec[0]>0,
+                           y_shifted=shift_vec[1]>0
+                           )
+    print (l)
+    return l
 
 
 tilings = {

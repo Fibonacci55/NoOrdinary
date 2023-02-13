@@ -1,28 +1,5 @@
 from dataclasses import dataclass, field
-from enum import Enum
-
-class Corner(Enum):
-    """
-        Enum type of four corners of a rectangular tile
-    """
-    NO = 0
-    UL = 1
-    UR = 2
-    LL = 3
-    LR = 4
-
-@dataclass
-class BoundingBox:
-    """
-        Bounding box of a rectangular tile
-    """
-    ulx: float
-    uly: float
-    lrx: float
-    lry: float
-
-    def __str__(self):
-        return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.lry, self.lry)
+from tile_common import Position, Corner, BoundingBox
 
 
 @dataclass
@@ -36,13 +13,13 @@ class Tile:
 
     def corner(self, which):
         if which == Corner.UL:
-            return (self.ulx, self.uly)
+            return self.ulx, self.uly
         elif which == Corner.LL:
-            return (self.ulx, self.uly+self.y_ext)
+            return self.ulx, self.uly+self.y_ext
         elif which == Corner.LR:
-            return (self.ulx+self.x_ext, self.uly+self.y_ext)
+            return self.ulx+self.x_ext, self.uly+self.y_ext
         else:
-            return (self.ulx+self.x_ext, self.uly)
+            return self.ulx+self.x_ext, self.uly
 
     @property
     def ul(self):
@@ -68,7 +45,7 @@ class Tile:
         return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.x_ext, self.y_ext)
 
 @dataclass
-class Image_Tile (Tile):
+class ImageTile (Tile):
     filename: str
 
 def tiles2image_tiles (tile_list, collection):
