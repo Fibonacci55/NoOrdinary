@@ -3,22 +3,27 @@ import svgwrite
 from math import floor
 from wand.image import Image
 import base64
+from abc import ABC, abstractmethod
+
+class TilingGenerator(ABC):
+
+    pass
 
 
-class SVG_Tiling_Generator:
+class SVGTilingGenerator(TilingGenerator):
 
-    def __init__(self, fname, tile_collection, size, distance, corr_factor):
+    def __init__(self, fname, image_collection, size, distance, corr_factor):
         """
 
         :param fname: Name of file to generated
-        :param tile_collection: Collection of pictures to be used as tile_list
+        :param image_collection: Collection of pictures to be used as tile_list
         :param size: Base size in mm of one logical unit
         :param distance: Distance between two adjacent pictures in resulting tiling
         :param corr_factor: Heuristic for correcting the dimension of picture using
                             liquid rescale
         """
         self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
-        self.tile_collection = tile_collection
+        self.tile_collection = image_collection
         self.size = size
         self.distance = distance
         self.corr_factor = corr_factor
@@ -28,7 +33,7 @@ class SVG_Tiling_Generator:
 
         :type tiling_program: object
         """
-        def make_image (tile, corr_fac):
+        def make_image(tile, corr_fac):
 
             x = "%smm" % floor(tile.ulx)
             y = "%smm" % floor(tile.uly)
