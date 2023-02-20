@@ -74,6 +74,18 @@ def bla(l):
 
     l[0] += 3
 
+
+@dataclass()
+class bla:
+
+    x : int
+
+@dataclass()
+class blabla(bla):
+    name : str
+
+
+
 if __name__ == '__main__':
     pass
     #fname = "D:\\Projects\\NoOrdinaryExes\\1_2\\131342501_858098905110778_4492636055371751330_n_cr.jpg"
@@ -82,10 +94,16 @@ if __name__ == '__main__':
     #img_href = "data:image/jpg;base64," + img.decode('ASCII')
     #make_image(outf_name, img_href)
 
-    import tilings as tp
+    #import tilings as tp
 
-    p = tp.Pine_Heel().clone()
-    p = tp.Pine_Heel().clone(shift_vec=(1,0))
-    p = tp.Pine_Heel().clone(scale=10)
-    p = tp.Pine_Heel().clone(scale=10, distance=10)
-    p = tp.Pine_Heel().clone(scale=10, shift_vec=(1,0), distance=10)
+    #p = tp.Pine_Heel().clone()
+    #p = tp.Pine_Heel().clone(shift_vec=(1,0))
+    #p = tp.Pine_Heel().clone(scale=10)
+    #p = tp.Pine_Heel().clone(scale=10, distance=10)
+    #p = tp.Pine_Heel().clone(scale=10, shift_vec=(1,0), distance=10)
+
+    b = bla(x=2)
+    bb = blabla(**b.__dict__, name='xxx')
+    #b.name = 'xxx'
+    print (b.__dict__)
+    print (bb)

@@ -36,8 +36,11 @@ def create_arg_parser():
     return parser
 
 
+import tiling_factory as tf
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    pass
 
+    scale = tf.ScalingTransform(factor=15)
+    d = tf.AddDistanceTransform(distance=5)
+    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])

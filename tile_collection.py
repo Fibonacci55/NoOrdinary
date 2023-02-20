@@ -49,10 +49,10 @@ class Tile_Collection:
             raise SelectorExhausted(selector)
 
 
-class Picture_Tiles(Tile_Collection):
+class Picture_Tile_Collection(Tile_Collection):
 
     def __init__(self, selection_method=Ordered_Selector()):
-        super(Picture_Tiles).__init__()
+        super(Picture_Tile_Collection).__init__()
 
     def add_directory(self, path, selector):
         self.tile_collection[selector] = glob.glob(path)

@@ -23,7 +23,11 @@ class SVG_Tiling_Generator:
         self.distance = distance
         self.corr_factor = corr_factor
 
-    def generate(self, tiling_program, tile_collection, corr_fac):
+    def generate(self, tiling_program: object, tile_collection, corr_fac):
+        """
+
+        :type tiling_program: object
+        """
         def make_image (tile, corr_fac):
 
             x = "%smm" % floor(tile.ulx)
