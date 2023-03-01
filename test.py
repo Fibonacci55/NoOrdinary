@@ -2,8 +2,10 @@ import base64
 import random as ra
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+from wand.image import Image
+from math import floor
+import urllib
 
-from svgwrite.extensions import Inkscape
 import svgwrite
 
 def xxx(l):
@@ -30,6 +32,30 @@ def make_image(fname, image):
 
     dwg.save()
 
+import svg
+import svg_gen
+def make_image_2(fname):
+
+    infile = open(fname, 'rb')
+    with Image(file=infile) as img:
+        width = img.width
+        height = img.height
+        if width > height:
+            img.liquid_rescale(width, floor(height * 0.9))
+        elif width < height:
+            img.liquid_rescale(floor(width * 0.9), height)
+        base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+
+    img_data = "data:image/jpg;base64," + base64_data
+    svg_img = svg.Image(href=fname, x="10", y="10", width="20", height="20" )
+
+    #canvas = svg.SVG(svg.ViewBoxSpec(0, 0, 100, 100), elements=[svg_img])
+    canvas = svg.SVG(elements=[svg_img])
+
+    outf = open("D:\\Temp\\out_2.svg", "w")
+    print(canvas, file=outf)
+    #outf.write(canvas)
+    outf.close()
 
 @dataclass
 class B(ABC):
@@ -88,22 +114,5 @@ class blabla(bla):
 
 if __name__ == '__main__':
     pass
-    #fname = "D:\\Projects\\NoOrdinaryExes\\1_2\\131342501_858098905110778_4492636055371751330_n_cr.jpg"
-    #outf_name = "D:\\Projects\\NoOrdinaryExes\\poster_1.svg"
-    #img = encode(fname)
-    #img_href = "data:image/jpg;base64," + img.decode('ASCII')
-    #make_image(outf_name, img_href)
-
-    #import tilings as tp
-
-    #p = tp.Pine_Heel().clone()
-    #p = tp.Pine_Heel().clone(shift_vec=(1,0))
-    #p = tp.Pine_Heel().clone(scale=10)
-    #p = tp.Pine_Heel().clone(scale=10, distance=10)
-    #p = tp.Pine_Heel().clone(scale=10, shift_vec=(1,0), distance=10)
-
-    b = bla(x=2)
-    bb = blabla(**b.__dict__, name='xxx')
-    #b.name = 'xxx'
-    print (b.__dict__)
-    print (bb)
+    fname = "D:\\Projects\\NoOrdinaryEyes\\1_1\\182385403_10159279385843501_1771795695471674866_n_cr.jpg"
+    make_image_2(fname)

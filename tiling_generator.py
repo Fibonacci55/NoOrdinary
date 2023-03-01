@@ -4,6 +4,9 @@ from math import floor
 from wand.image import Image
 import base64
 from abc import ABC, abstractmethod
+import svg_gen as svg
+from tile import Tile
+from svg_gen import create_svg_creator
 
 class TilingGenerator(ABC):
 
@@ -12,7 +15,7 @@ class TilingGenerator(ABC):
 
 class SVGTilingGenerator(TilingGenerator):
 
-    def __init__(self, fname, image_collection, size, distance, corr_factor):
+    def __init__(self, file_name, image_collection, size, distance, corr_factor):
         """
 
         :param fname: Name of file to generated
@@ -22,18 +25,14 @@ class SVGTilingGenerator(TilingGenerator):
         :param corr_factor: Heuristic for correcting the dimension of picture using
                             liquid rescale
         """
-        self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
+        #self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
+        self.file_name = file_name
         self.tile_collection = image_collection
         self.size = size
         self.distance = distance
         self.corr_factor = corr_factor
 
-    def generate(self, tiling_program: object, tile_collection, corr_fac):
-        """
-
-        :type tiling_program: object
-        """
-        def make_image(tile, corr_fac):
+        def make_image_tile(tile: Tile, file_name: str, corr_fac: float):
 
             x = "%smm" % floor(tile.ulx)
             y = "%smm" % floor(tile.uly)
@@ -55,9 +54,15 @@ class SVGTilingGenerator(TilingGenerator):
             img = svgwrite.image.Image(img_data, insert=(x, y), size=(x_ext, y_ext))
             return img
 
+    def generate(self, tiling_program: list[Tile], tile_collection, corr_fac):
+        """
+
+        :type tiling_program: object
+        """
+
         for tile in tiling_program():
 
-            img = make_image(tile, corr_fac)
+            img = self.make_image(tile, corr_fac)
             self.dwg.add (img)
 
     def save(self):
