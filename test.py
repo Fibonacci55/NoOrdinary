@@ -34,6 +34,11 @@ def make_image(fname, image):
 
 import svg
 import svg_gen
+class MyImage(svg.Image):
+
+    xlink__href : str
+
+
 def make_image_2(fname):
 
     infile = open(fname, 'rb')
@@ -46,8 +51,10 @@ def make_image_2(fname):
             img.liquid_rescale(floor(width * 0.9), height)
         base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
 
-    img_data = "data:image/jpg;base64," + base64_data
-    svg_img = svg.Image(href=fname, x="10", y="10", width="20", height="20" )
+    #img_data = "data:image/jpg;base64," + base64_data
+    #svg_img = svg.Image(href=img_data, x="10", y="10", width="20", height="20" )
+    img_ref = 'file:' + urllib.request.pathname2url(fname)
+    svg_img = MyImage(xlink__href=img_ref, x="10", y="10", width="20", height="20" )
 
     #canvas = svg.SVG(svg.ViewBoxSpec(0, 0, 100, 100), elements=[svg_img])
     canvas = svg.SVG(elements=[svg_img])
@@ -100,15 +107,6 @@ def bla(l):
 
     l[0] += 3
 
-
-@dataclass()
-class bla:
-
-    x : int
-
-@dataclass()
-class blabla(bla):
-    name : str
 
 
 

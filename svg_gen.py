@@ -34,6 +34,11 @@ class SvgCreator(ABC):
 
 import svg
 
+
+class MyImage(svg.Image):
+
+    xlink__href : str
+
 class SvgDraw(SvgCreator):
 
 
@@ -56,7 +61,7 @@ class SvgDraw(SvgCreator):
             base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
 
         img_data = "data:image/jpg;base64," + base64_data
-        svg_img = svg.Image(data=img_data, )
+        svg_img = svg.Image(href=img_data )
 
 
 def create_svg_creator() -> SvgCreator:
