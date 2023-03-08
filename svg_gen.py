@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from wand.image import Image
 import base64
 from math import floor
+import urllib
 
 
 
@@ -28,40 +29,53 @@ class SvgCreator(ABC):
     def save_document(self):
         """ Saves a SVG document"""
 
-    def create_image (img_file : str, width : int, height: int, ulx : int, uly: int, corr_fac: float) -> object:
+    @abstractmethod
+    def create_image (img_file : str, width : int, height: int, ulx : int, uly: int) -> object:
         """ Creates an SVG image with dimension widthxheight. upper left position at (ulx, uly) """
 
+    @abstractmethod
+    def add_to_image(self, element) -> None:
+        """ Adds an element to the image canvas """
+
+    @abstractmethod
+    def add_to_group(self, grp_id: int, element: object) -> None:
+        """ Adds an element to the group with id grp_id"""
+
+    def get_group(self, grp_id: int) -> object:
+        """ Retrieves group with id grp_id """
 
 import svg
 
-
-class MyImage(svg.Image):
-
-    xlink__href : str
-
 class SvgDraw(SvgCreator):
 
-
     def __init__(self):
-        pass
+        self.groups = []
 
     def create_document(self, name: str, options: DocumentOptions) -> None:
+        self.name = name
         self.options = options
-        self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, options.width, options.height))
+        self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, options.width, options.height), elements=[])
+        return self.canvas
 
+    def add_to_image(self, element) -> None:
+        self.canvas.elements.append(element)
+    def create_group(self) -> int:
+        self.groups.append(svg.G(elements=[]))
+        return len(self.groups) - 1
 
-    def create_image(img_file : str, width : int, height: int, ulx : int, uly: int, corr_fac: float) -> object:
-        with Image(file=img_file) as img:
-            width = img.width
-            height = img.height
-            if width > height:
-                img.liquid_rescale(width, floor(height * corr_fac))
-            elif width < height:
-                img.liquid_rescale(floor(width * corr_fac), height)
-            base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+    def create_image(self, img_data : str, width : int, height: int, ulx : int, uly: int) -> object:
+        #print (width, height)
+        svg_img = svg.Image(xlink__href=img_data, x=ulx, y=uly, width=width, height=height )
+        return svg_img
+    def add_to_group(self, grp_id: int, element: object) -> None:
+        self.groups[grp_id].elements.append(element)
 
-        img_data = "data:image/jpg;base64," + base64_data
-        svg_img = svg.Image(href=img_data )
+    def get_group(self, grp_id: int) -> object:
+        return self.groups[grp_id]
+    def save_document(self):
+        outf = open(self.name)
+        print(self.canvas, file=outf)
+        outf.close()
 
 
 def create_svg_creator() -> SvgCreator:

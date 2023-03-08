@@ -41,8 +41,16 @@ class Tile:
     def ext(self):
         return (self.x_ext, self.y_ext)
 
-    def __str__(self):
-        return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.x_ext, self.y_ext)
+    #def __str__(self):
+    #    return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.x_ext, self.y_ext)
+
+    def __lt__(self, other):
+        if self.ulx < other.ulx:
+            return True
+        if self.ulx == other.ulx:
+            if self.uly < other.uly:
+                return True
+        return False
 
 @dataclass
 class ImageTile (Tile):

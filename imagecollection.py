@@ -56,8 +56,10 @@ class ImageCollection:
 
 class PictureImageCollection(ImageCollection):
 
-    def __init__(self, selection_method=OrderedSelector()):
-        super(PictureImageCollection).__init__(selection_method)
+    def __init__(self, selection_method=OrderedSelector(), img_ext='.jpg'):
+        super().__init__(selection_method)
+        self.img_ext = img_ext
 
     def add_directory(self, path: str, selector: str) -> None:
-        self.image_collection[selector] = glob.glob(path)
+        #print(path)
+        self.image_collection[selector] = glob.glob(path + '\*' + self.img_ext )

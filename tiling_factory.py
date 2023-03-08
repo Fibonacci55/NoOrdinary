@@ -58,17 +58,54 @@ class AddDistanceTransform(TilingTransformation):
         self.x_shifted = x_shifted
         self.y_shifted = y_shifted
 
+
+
+
     def transform(self, tiling: list[Tile]) -> list[Tile]:
 
+        tiling.sort(key=lambda x: (x.ulx, x.uly))
+
+        mul = -1
+        cur_x = tiling[0].ulx
         for tile in tiling:
-            if tile.ulx == 0 and self.x_shifted:
-                tile.ulx += self.distance
+            bef_tile = deepcopy(tile)
+            if tile.ulx == cur_x:
+                mul += 1
+            else:
+                mul = 0
+                cur_x = tile.ulx
             if tile.uly == 0 and self.y_shifted:
                 tile.uly += self.distance
-            if tile.ulx > 0:
-                tile.ulx += self.distance
             if tile.uly > 0:
-                tile.uly += self.distance
+                tile.uly += self.distance * mul
+
+            print (bef_tile, tile)
+
+        tiling.sort(key=lambda x: (x.uly, x.ulx))
+
+        mul = -1
+        cur_y = tiling[0].uly
+        for tile in tiling:
+            if tile.uly == cur_y:
+                mul += 1
+            else:
+                mul = 0
+                cur_y = tile.uly
+            if tile.ulx == 0 and self.x_shifted:
+                tile.ulx += self.distance
+            if tile.ulx > 0:
+                tile.ulx += self.distance * mul
+
+        #for tile in tiling:
+        #    print('before', tile)
+        #    if tile.ulx == 0 and self.x_shifted:
+        #        tile.ulx += self.distance
+        #    if tile.uly == 0 and self.y_shifted:
+        #        tile.uly += self.distance
+        #    if tile.ulx > 0:
+        #        tile.ulx += self.distance
+        #    if tile.uly > 0:
+        #        tile.uly += self.distance
 
         return tiling
 

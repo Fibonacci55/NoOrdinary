@@ -6,64 +6,50 @@ import base64
 from abc import ABC, abstractmethod
 import svg_gen as svg
 from tile import Tile
-from svg_gen import create_svg_creator
+from svg_gen import create_svg_creator, DocumentOptions
+from imagecollection import ImageCollection
 
-class TilingGenerator(ABC):
+def make_image_data(file_name: str, corr_fac: float):
 
-    pass
+    infile = open(file_name, 'rb')
+    #print (file_name)
+    with Image(file=infile) as img:
+        width = img.width
+        height = img.height
+        if width > height:
+            img.liquid_rescale(width, floor(height * corr_fac))
+        elif width < height:
+            img.liquid_rescale(floor(width * corr_fac), height)
+        base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+
+    img_data = "data:image/jpg;base64," + base64_data
+    return img_data
+
+def generate(file_name: str,
+             tiling_program: list[Tile],
+             img_coll: ImageCollection,
+             corr_factor: float):
+
+    svg = create_svg_creator()
+    doc = svg.create_document(file_name, DocumentOptions(width=200, height=200, unit="mm"))
+    group = svg.create_group()
+    for tile in tiling_program:
+        img_file = img_coll.next(tile.selector)
+        img_data = make_image_data(img_file, corr_factor)
+        #print(len(img_data))
+        #print(tile.x_ext, tile.y_ext)
+        print(tile)
+        img = svg.create_image(img_data,
+                               tile.x_ext,
+                               tile.y_ext,
+                               tile.ulx,
+                               tile.uly)
+        svg.add_to_group(group, img)
+
+    #print(len(doc.canvas.elements))
+    svg.add_to_image(svg.get_group(group))
+
+    with open(file_name, "w") as img_file:
+        print(doc, file=img_file)
 
 
-class SVGTilingGenerator(TilingGenerator):
-
-    def __init__(self, file_name, image_collection, size, distance, corr_factor):
-        """
-
-        :param fname: Name of file to generated
-        :param image_collection: Collection of pictures to be used as tile_list
-        :param size: Base size in mm of one logical unit
-        :param distance: Distance between two adjacent pictures in resulting tiling
-        :param corr_factor: Heuristic for correcting the dimension of picture using
-                            liquid rescale
-        """
-        #self.dwg = svgwrite.Drawing(fname, size=("841mm", "1189mm"))
-        self.file_name = file_name
-        self.tile_collection = image_collection
-        self.size = size
-        self.distance = distance
-        self.corr_factor = corr_factor
-
-        def make_image_tile(tile: Tile, file_name: str, corr_fac: float):
-
-            x = "%smm" % floor(tile.ulx)
-            y = "%smm" % floor(tile.uly)
-            x_ext = "%smm" % tile.x_ext
-            y_ext = "%smm" % tile.y_ext
-
-            infile = open(tile.filename, 'rb')
-            print(tile.filename)
-            with Image(file=infile) as img:
-                width = img.width
-                height = img.height
-                if x_ext > y_ext:
-                    img.liquid_rescale(width, floor(height * corr_fac))
-                elif x_ext < y_ext:
-                    img.liquid_rescale(floor(width * corr_fac), height)
-                base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
-
-            img_data = "data:image/jpg;base64," + base64_data
-            img = svgwrite.image.Image(img_data, insert=(x, y), size=(x_ext, y_ext))
-            return img
-
-    def generate(self, tiling_program: list[Tile], tile_collection, corr_fac):
-        """
-
-        :type tiling_program: object
-        """
-
-        for tile in tiling_program():
-
-            img = self.make_image(tile, corr_fac)
-            self.dwg.add (img)
-
-    def save(self):
-        self.dwg.save()
