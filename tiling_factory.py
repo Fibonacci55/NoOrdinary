@@ -4,6 +4,7 @@ from tile import Tile
 from tile_common import Position, Corner, BoundingBox
 from copy import deepcopy
 from abc import ABC, abstractmethod
+from math import floor
 
 
 class InvalidTiling(Exception):
@@ -33,8 +34,8 @@ class ScalingTransform(TilingTransformation):
         for tile in tiling:
             tile.ulx *= self.factor
             tile.uly *= self.factor
-            tile.x_ext *= self.factor
-            tile.y_ext *= self.factor
+            tile.width *= self.factor
+            tile.height *= self.factor
 
         return tiling
 
@@ -59,53 +60,70 @@ class AddDistanceTransform(TilingTransformation):
         self.y_shifted = y_shifted
 
 
+    def __adjust_tile (self, dir: chr, tile:Tile) -> None:
+        pass
 
 
     def transform(self, tiling: list[Tile]) -> list[Tile]:
 
         tiling.sort(key=lambda x: (x.ulx, x.uly))
+        bef_tiles = []
+        aft_tiles = []
 
-        mul = -1
         cur_x = tiling[0].ulx
+        dist_cnt = 0
         for tile in tiling:
-            bef_tile = deepcopy(tile)
-            if tile.ulx == cur_x:
-                mul += 1
-            else:
-                mul = 0
+            bef_tiles.append(deepcopy(tile))
+
+            if tile.ulx != cur_x:
+                if 'T' in tile.neighbours:
+                    dist_cnt = 1
+                else:
+                    dist_cnt = 0
                 cur_x = tile.ulx
+            if tile.height > tile.width:
+                ratio = floor(tile.height / tile.width)
+                #tile.height += (ratio - 1) * self.distance
+            else:
+                ratio = 1
             if tile.uly == 0 and self.y_shifted:
-                tile.uly += self.distance
+                tile.uly = self.distance
             if tile.uly > 0:
-                tile.uly += self.distance * mul
+                tile.uly += dist_cnt * self.distance
 
-            print (bef_tile, tile)
+            dist_cnt += ratio
 
+        print("=====================================")
         tiling.sort(key=lambda x: (x.uly, x.ulx))
 
-        mul = -1
         cur_y = tiling[0].uly
+        dist_cnt = 0
         for tile in tiling:
-            if tile.uly == cur_y:
-                mul += 1
-            else:
-                mul = 0
-                cur_y = tile.uly
-            if tile.ulx == 0 and self.x_shifted:
-                tile.ulx += self.distance
-            if tile.ulx > 0:
-                tile.ulx += self.distance * mul
 
-        #for tile in tiling:
-        #    print('before', tile)
-        #    if tile.ulx == 0 and self.x_shifted:
-        #        tile.ulx += self.distance
-        #    if tile.uly == 0 and self.y_shifted:
-        #        tile.uly += self.distance
-        #    if tile.ulx > 0:
-        #        tile.ulx += self.distance
-        #    if tile.uly > 0:
-        #        tile.uly += self.distance
+            if tile.uly != cur_y:
+                if 'L' in tile.neighbours:
+                    dist_cnt = 1
+                else:
+                    dist_cnt = 0
+                cur_y = tile.uly
+            if tile.width > tile.height:
+                ratio = floor(tile.width / tile.height)
+                #tile.width += (ratio - 1) * self.distance
+            else:
+                ratio = 1
+            if tile.ulx == 0 and self.x_shifted:
+                tile.ulx = self.distance
+            if tile.ulx > 0:
+                tile.ulx += dist_cnt * self.distance
+
+            dist_cnt += ratio
+
+            aft_tiles.append(deepcopy(tile))
+
+        tiling.sort(key=lambda x: (x.ulx, x.uly))
+
+        for i in range(0, len(tiling)-1):
+            print(bef_tiles[i], tiling[i])
 
         return tiling
 

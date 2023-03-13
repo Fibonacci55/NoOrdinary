@@ -37,11 +37,11 @@ def generate(file_name: str,
         img_file = img_coll.next(tile.selector)
         img_data = make_image_data(img_file, corr_factor)
         #print(len(img_data))
-        #print(tile.x_ext, tile.y_ext)
+        #print(tile.width, tile.height)
         print(tile)
         img = svg.create_image(img_data,
-                               tile.x_ext,
-                               tile.y_ext,
+                               tile.width,
+                               tile.height,
                                tile.ulx,
                                tile.uly)
         svg.add_to_group(group, img)

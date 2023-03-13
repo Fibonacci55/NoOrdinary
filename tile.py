@@ -7,19 +7,20 @@ class Tile:
 
     ulx: float
     uly: float
-    x_ext: float
-    y_ext: float
+    width: float
+    height: float
     selector: str
+    neighbours: str
 
     def corner(self, which):
         if which == Corner.UL:
             return self.ulx, self.uly
         elif which == Corner.LL:
-            return self.ulx, self.uly+self.y_ext
+            return self.ulx, self.uly+self.height
         elif which == Corner.LR:
-            return self.ulx+self.x_ext, self.uly+self.y_ext
+            return self.ulx + self.width, self.uly + self.height
         else:
-            return self.ulx+self.x_ext, self.uly
+            return self.ulx+self.width, self.uly
 
     @property
     def ul(self):
@@ -39,10 +40,10 @@ class Tile:
 
     @property
     def ext(self):
-        return (self.x_ext, self.y_ext)
+        return (self.width, self.height)
 
     #def __str__(self):
-    #    return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.x_ext, self.y_ext)
+    #    return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.width, self.height)
 
     def __lt__(self, other):
         if self.ulx < other.ulx:
