@@ -83,7 +83,7 @@ class AddDistanceTransform(TilingTransformation):
                 cur_x = tile.ulx
             if tile.height > tile.width:
                 ratio = floor(tile.height / tile.width)
-                #tile.height += (ratio - 1) * self.distance
+                tile.height += (ratio - 1) * self.distance
             else:
                 ratio = 1
             if tile.uly == 0 and self.y_shifted:
@@ -108,7 +108,7 @@ class AddDistanceTransform(TilingTransformation):
                 cur_y = tile.uly
             if tile.width > tile.height:
                 ratio = floor(tile.width / tile.height)
-                #tile.width += (ratio - 1) * self.distance
+                tile.width += (ratio - 1) * self.distance
             else:
                 ratio = 1
             if tile.ulx == 0 and self.x_shifted:

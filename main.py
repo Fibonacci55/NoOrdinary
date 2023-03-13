@@ -43,8 +43,8 @@ from imagecollection import PictureImageCollection
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
-    scale = tf.ScalingTransform(factor=50)
-    d = tf.AddDistanceTransform(distance=1)
+    scale = tf.ScalingTransform(factor=30)
+    d = tf.AddDistanceTransform(distance=2)
     tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
     coll = PictureImageCollection()
     coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
@@ -52,4 +52,4 @@ if __name__ == '__main__':
     coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
 
     #print(coll.image_collection['1:1'])
-    generate("D:\\Temp\\Test.svg", tiles, coll, 1.1)
+    generate("D:\\Temp\\Test.svg", tiles, coll)
