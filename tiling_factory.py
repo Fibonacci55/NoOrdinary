@@ -64,68 +64,69 @@ class AddDistanceTransform(TilingTransformation):
         pass
 
 
-    def transform(self, tiling: list[Tile]) -> list[Tile]:
+    #def transform(self, tiling: list[Tile]) -> list[Tile]:
 
-        tiling.sort(key=lambda x: (x.ulx, x.uly))
-        bef_tiles = []
-        aft_tiles = []
+    #    tiling.sort(key=lambda x: (x.ulx, x.uly))
+    #    bef_tiles = []
+    #    aft_tiles = []
+#
+#        cur_x = tiling[0].ulx
+#        dist_cnt = 0
+#        for tile in tiling:
+#            bef_tiles.append(deepcopy(tile))
+#
+#            if tile.ulx != cur_x:
+#                if 'T' in tile.neighbours:
+#                    dist_cnt = 1
+#                else:
+#                    dist_cnt = 0
+#                cur_x = tile.ulx
+#            if tile.height > tile.width:
+#                ratio = floor(tile.height / tile.width)
+#                tile.height += (ratio - 1) * self.distance
+#            else:
+#                ratio = 1
+#            if tile.uly == 0 and self.y_shifted:
+#                tile.uly = self.distance
+#            if tile.uly > 0:
+#                tile.uly += dist_cnt * self.distance
+#
+#            dist_cnt += ratio
+#
+#        print("=====================================")
+#        tiling.sort(key=lambda x: (x.uly, x.ulx))
+#
+#        cur_y = tiling[0].uly
+#        dist_cnt = 0
+#        for tile in tiling:
+#
+#            if tile.uly != cur_y:
+#                if 'L' in tile.neighbours:
+#                    dist_cnt = 1
+#                else:
+#                    dist_cnt = 0
+#                cur_y = tile.uly
+#            if tile.width > tile.height:
+#                ratio = floor(tile.width / tile.height)
+#                tile.width += (ratio - 1) * self.distance
+#            else:
+#                ratio = 1
+#            if tile.ulx == 0 and self.x_shifted:
+#                tile.ulx = self.distance
+#            if tile.ulx > 0:
+#                tile.ulx += dist_cnt * self.distance
+#
+#            dist_cnt += ratio
+#
+#            aft_tiles.append(deepcopy(tile))
+#
+#        tiling.sort(key=lambda x: (x.ulx, x.uly))
+#
+#        for i in range(0, len(tiling)-1):
+#            print(bef_tiles[i], tiling[i])
+#
+#        return tiling
 
-        cur_x = tiling[0].ulx
-        dist_cnt = 0
-        for tile in tiling:
-            bef_tiles.append(deepcopy(tile))
-
-            if tile.ulx != cur_x:
-                if 'T' in tile.neighbours:
-                    dist_cnt = 1
-                else:
-                    dist_cnt = 0
-                cur_x = tile.ulx
-            if tile.height > tile.width:
-                ratio = floor(tile.height / tile.width)
-                tile.height += (ratio - 1) * self.distance
-            else:
-                ratio = 1
-            if tile.uly == 0 and self.y_shifted:
-                tile.uly = self.distance
-            if tile.uly > 0:
-                tile.uly += dist_cnt * self.distance
-
-            dist_cnt += ratio
-
-        print("=====================================")
-        tiling.sort(key=lambda x: (x.uly, x.ulx))
-
-        cur_y = tiling[0].uly
-        dist_cnt = 0
-        for tile in tiling:
-
-            if tile.uly != cur_y:
-                if 'L' in tile.neighbours:
-                    dist_cnt = 1
-                else:
-                    dist_cnt = 0
-                cur_y = tile.uly
-            if tile.width > tile.height:
-                ratio = floor(tile.width / tile.height)
-                tile.width += (ratio - 1) * self.distance
-            else:
-                ratio = 1
-            if tile.ulx == 0 and self.x_shifted:
-                tile.ulx = self.distance
-            if tile.ulx > 0:
-                tile.ulx += dist_cnt * self.distance
-
-            dist_cnt += ratio
-
-            aft_tiles.append(deepcopy(tile))
-
-        tiling.sort(key=lambda x: (x.ulx, x.uly))
-
-        for i in range(0, len(tiling)-1):
-            print(bef_tiles[i], tiling[i])
-
-        return tiling
 
 
 def make_single_tiling(name: str, transformations: list[TilingTransformation]) -> list[Tile]:
