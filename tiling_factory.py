@@ -64,7 +64,7 @@ class AddDistanceTransform(TilingTransformation):
         pass
 
 
-    #def transform(self, tiling: list[Tile]) -> list[Tile]:
+    def transform(self, tiling: list[Tile]) -> list[Tile]:
 
     #    tiling.sort(key=lambda x: (x.ulx, x.uly))
     #    bef_tiles = []
@@ -96,36 +96,39 @@ class AddDistanceTransform(TilingTransformation):
 #        print("=====================================")
 #        tiling.sort(key=lambda x: (x.uly, x.ulx))
 #
-#        cur_y = tiling[0].uly
-#        dist_cnt = 0
-#        for tile in tiling:
-#
-#            if tile.uly != cur_y:
-#                if 'L' in tile.neighbours:
-#                    dist_cnt = 1
-#                else:
-#                    dist_cnt = 0
-#                cur_y = tile.uly
-#            if tile.width > tile.height:
-#                ratio = floor(tile.width / tile.height)
-#                tile.width += (ratio - 1) * self.distance
-#            else:
-#                ratio = 1
-#            if tile.ulx == 0 and self.x_shifted:
-#                tile.ulx = self.distance
-#            if tile.ulx > 0:
-#                tile.ulx += dist_cnt * self.distance
-#
-#            dist_cnt += ratio
-#
-#            aft_tiles.append(deepcopy(tile))
-#
-#        tiling.sort(key=lambda x: (x.ulx, x.uly))
-#
-#        for i in range(0, len(tiling)-1):
-#            print(bef_tiles[i], tiling[i])
-#
-#        return tiling
+        def one_pass (tiling: list[Tile], distance: int, att1: str, att2: str, side1: str, side2: str) -> None:
+
+            ref_att = getattr(tiling[0], att1)
+            dist_cnt = 0
+            for tile in tiling:
+
+                if getattr(tile, att1) != ref_att:
+                    if side1 in tile.neighbours:
+                        dist_cnt = 1
+                    else:
+                        dist_cnt = 0
+                    ref_att = getattr(tile, att1)
+                if tile.width > tile.height:
+                    ratio = floor(tile.width / tile.height)
+                    tile.width += (ratio - 1) * distance
+                else:
+                    ratio = 1
+                if getattr(tile, att2) == 0 and side2 in tile.neighbours:
+                    setattr(tile, att2, distance)
+                if getattr(tile, att2) > 0:
+                    setattr(tile, att2, getattr(tile, att2) + dist_cnt * distance)
+
+                dist_cnt += ratio
+
+    #            aft_tiles.append(deepcopy(tile))
+
+
+        tiling.sort(key=lambda x: (x.ulx, x.uly))
+        one_pass(tiling, self.distance, 'ulx', 'uly', 'T', 'L')
+        tiling.sort(key=lambda x: (x.uly, x.ulx))
+        one_pass(tiling, self.distance, 'uly', 'ulx', 'L', 'T')
+
+        return tiling
 
 
 

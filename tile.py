@@ -5,12 +5,12 @@ from tile_common import Position, Corner, BoundingBox
 @dataclass
 class Tile:
 
-    ulx: float
-    uly: float
-    width: float
-    height: float
+    ulx: float = 0.0
+    uly: float = 0.0
+    width: float = 0.0
+    height: float = 0.0
     selector: str
-    neighbours: str
+    pos : tuple = ()
 
     def corner(self, which):
         if which == Corner.UL:
