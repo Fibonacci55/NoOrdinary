@@ -45,8 +45,9 @@ if __name__ == '__main__':
 
     scale = tf.ScalingTransform(factor=30)
     d = tf.AddDistanceTransform(distance=3)
-    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
-    #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
+    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale])
+    tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
     coll = PictureImageCollection()
     coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")

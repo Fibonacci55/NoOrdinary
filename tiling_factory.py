@@ -1,5 +1,5 @@
 
-from tilings import tilings
+from tilings import tilings, Tiling
 from tile import Tile
 from tile_common import Position, Corner, BoundingBox
 from copy import deepcopy
@@ -20,18 +20,18 @@ def calc_bb(tile_list : list[Tile]) -> BoundingBox:
 
 class TilingTransformation(ABC):
     @abstractmethod
-    def transform(self, tiling : list[Tile]) -> list[Tile]:
+    def transform(self, tiling : Tiling) -> list[Tile]:
         """ Does a transformation of a list of tiles """
 
 class ScalingTransform(TilingTransformation):
     def __init__(self, factor):
         self.factor = factor
-    def transform(self, tiling: list[Tile] ) -> list[Tile]:
+    def transform(self, tiling: Tiling) -> Tiling:
         """
         :param tiling:
         :return:
         """
-        for tile in tiling:
+        for id, tile in tiling.tiles.items():
             tile.ulx *= self.factor
             tile.uly *= self.factor
             tile.width *= self.factor
@@ -44,9 +44,9 @@ class MoveTransform(TilingTransformation):
     def __init__(self, to_pos: Position):
         self.to_pos = to_pos
 
-    def transform(self, tiling : list[Tile]) -> list[Tile]:
+    def transform(self, tiling : Tiling) -> Tiling:
 
-        for tile in tiling:
+        for tile in tiling.tiles:
             tile.ulx += self.to_pos.x
             tile.uly += self.to_pos.y
 
@@ -59,80 +59,44 @@ class AddDistanceTransform(TilingTransformation):
         self.x_shifted = x_shifted
         self.y_shifted = y_shifted
 
+    def transform(self, tiling: Tiling) -> Tiling:
 
-    def __adjust_tile (self, dir: chr, tile:Tile) -> None:
-        pass
+        if self.x_shifted:
+            tiling.tiles[1].ulx += self.distance
+        if self.y_shifted:
+            tiling.tiles[1].uly += self.distance
 
+        cur_tile = tiling.tiles[1]
+        if cur_tile.height > cur_tile.width:
+            r = cur_tile.height // cur_tile.width - 1
+            cur_tile.height += r * self.distance
+        if cur_tile.height < cur_tile.width:
+            r = cur_tile.width // cur_tile.height  - 1
+            cur_tile.width += r * self.distance
 
-    def transform(self, tiling: list[Tile]) -> list[Tile]:
-
-    #    tiling.sort(key=lambda x: (x.ulx, x.uly))
-    #    bef_tiles = []
-    #    aft_tiles = []
-#
-#        cur_x = tiling[0].ulx
-#        dist_cnt = 0
-#        for tile in tiling:
-#            bef_tiles.append(deepcopy(tile))
-#
-#            if tile.ulx != cur_x:
-#                if 'T' in tile.neighbours:
-#                    dist_cnt = 1
-#                else:
-#                    dist_cnt = 0
-#                cur_x = tile.ulx
-#            if tile.height > tile.width:
-#                ratio = floor(tile.height / tile.width)
-#                tile.height += (ratio - 1) * self.distance
-#            else:
-#                ratio = 1
-#            if tile.uly == 0 and self.y_shifted:
-#                tile.uly = self.distance
-#            if tile.uly > 0:
-#                tile.uly += dist_cnt * self.distance
-#
-#            dist_cnt += ratio
-#
-#        print("=====================================")
-#        tiling.sort(key=lambda x: (x.uly, x.ulx))
-#
-        def one_pass (tiling: list[Tile], distance: int, att1: str, att2: str, side1: str, side2: str) -> None:
-
-            ref_att = getattr(tiling[0], att1)
-            dist_cnt = 0
-            for tile in tiling:
-
-                if getattr(tile, att1) != ref_att:
-                    if side1 in tile.neighbours:
-                        dist_cnt = 1
-                    else:
-                        dist_cnt = 0
-                    ref_att = getattr(tile, att1)
-                if tile.width > tile.height:
-                    ratio = floor(tile.width / tile.height)
-                    tile.width += (ratio - 1) * distance
-                else:
-                    ratio = 1
-                if getattr(tile, att2) == 0 and side2 in tile.neighbours:
-                    setattr(tile, att2, distance)
-                if getattr(tile, att2) > 0:
-                    setattr(tile, att2, getattr(tile, att2) + dist_cnt * distance)
-
-                dist_cnt += ratio
-
-    #            aft_tiles.append(deepcopy(tile))
-
-
-        tiling.sort(key=lambda x: (x.ulx, x.uly))
-        one_pass(tiling, self.distance, 'ulx', 'uly', 'T', 'L')
-        tiling.sort(key=lambda x: (x.uly, x.ulx))
-        one_pass(tiling, self.distance, 'uly', 'ulx', 'L', 'T')
+        for edge in tiling.edge_list:
+            cur_tile = tiling.tiles[edge[1]]
+            rel_tile = tiling.tiles[edge[0]]
+            cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos[1])
+            if cur_tile.pos[1] == Corner.UR:
+                cur_tile.ulx += self.distance
+            if cur_tile.pos[1] == Corner.LL:
+                cur_tile.uly += self.distance
+            if cur_tile.pos[1] == Corner.LR:
+                cur_tile.ulx += self.distance
+                cur_tile.uly += self.distance
+            if cur_tile.height > cur_tile.width:
+                r = cur_tile.height // cur_tile.width - 1
+                cur_tile.height += r * self.distance
+            if cur_tile.height < cur_tile.width:
+                r = cur_tile.width // cur_tile.height  - 1
+                cur_tile.width += r * self.distance
 
         return tiling
 
 
 
-def make_single_tiling(name: str, transformations: list[TilingTransformation]) -> list[Tile]:
+def make_single_tiling(name: str, transformations: list[TilingTransformation]) -> Tiling:
     if name not in tilings:
        raise InvalidTiling('Tiling %s not found' % name)
 

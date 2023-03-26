@@ -9,17 +9,20 @@ class Tile:
     uly: float = 0.0
     width: float = 0.0
     height: float = 0.0
-    selector: str
-    pos : tuple = ()
+    selector: str = ''
+    pos: tuple[int, Corner] = (None, None)
 
     def corner(self, which):
         if which == Corner.UL:
             return self.ulx, self.uly
         elif which == Corner.LL:
+            print(self.ulx, self.uly+self.height)
             return self.ulx, self.uly+self.height
         elif which == Corner.LR:
+            print(self.ulx + self.width, self.uly + self.height)
             return self.ulx + self.width, self.uly + self.height
         else:
+            print(self.ulx+self.width, self.uly)
             return self.ulx+self.width, self.uly
 
     @property
@@ -52,12 +55,3 @@ class Tile:
             if self.uly < other.uly:
                 return True
         return False
-
-@dataclass
-class ImageTile (Tile):
-    filename: str
-
-def tiles2image_tiles (tile_list, collection):
-
-    for tile in tile_list:
-        pass

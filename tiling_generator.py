@@ -8,6 +8,7 @@ import svg_gen as svg
 from tile import Tile
 from svg_gen import create_svg_creator, DocumentOptions
 from imagecollection import ImageCollection
+from tilings import Tiling
 
 def make_image_data(file_name: str):
 
@@ -23,14 +24,13 @@ def make_image_data(file_name: str):
     return img_data
 
 def generate(file_name: str,
-             tiling_program: list[Tile],
+             tiling: Tiling,
              img_coll: ImageCollection):
-
 
     svg = create_svg_creator()
     doc = svg.create_document(file_name, DocumentOptions(width=200, height=200, unit="mm"))
     group = svg.create_group()
-    for tile in tiling_program:
+    for id, tile in tiling.tiles.items():
         img_file = img_coll.next(tile.selector)
         img_data = make_image_data(img_file)
         #print(len(img_data))
