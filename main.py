@@ -43,16 +43,20 @@ from imagecollection import PictureImageCollection
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
-    scale = tf.ScalingTransform(factor=30)
-    d = tf.AddDistanceTransform(distance=3)
-    #tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
-    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale])
-    tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
+    scale = tf.ScalingTransform(factor=3)
+    d = tf.AddDistanceTransform(distance=2)
+    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
     coll = PictureImageCollection()
-    coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
-    coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
-    coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
+    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
+    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
+    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
+    #
+    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_1", selector="1:1")
+    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\2_1", selector="2:1")
+    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_2", selector="1:2")
 
     #print(coll.image_collection['1:1'])
     generate("D:\\Temp\\Test.svg", tiles, coll)

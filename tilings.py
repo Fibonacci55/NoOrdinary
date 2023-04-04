@@ -38,10 +38,24 @@ tilings = {
             7: Tile(selector='1:2', pos=(4, Corner.LL), width=1, height=2),
             8: Tile(selector='1:1', pos=(7, Corner.UR), width=1, height=1),
             9: Tile(selector='1:1', pos=(8, Corner.UR), width=1, height=1),
-            10: Tile(selector='1:1',pos=(9, Corner.UR), width=1, height=1),
-            11: Tile(selector='1:1',pos=(8, Corner.LL), width=1, height=1),
+            10: Tile(selector='1:1', pos=(9, Corner.UR), width=1, height=1),
+            11: Tile(selector='1:1', pos=(8, Corner.LL), width=1, height=1),
             12: Tile(selector='2:1', pos=(11, Corner.UR), width=2, height=1),
         }),
+    'Pine_Heel_1':
+        Tiling(
+            {
+                1: Tile(selector='2:1', ulx=0, uly=0, width=2, height=1),
+                2: Tile(selector='1:1', pos=(1, Corner.UR), width=1, height=1),
+                3: Tile(selector='1:2', pos=(2, Corner.UR), width=1, height=2),
+                4: Tile(selector='1:1', pos=(1, Corner.LL), width=1, height=1),
+                5: Tile(selector='1:1', pos=(4, Corner.UR), width=2, height=2),
+                6: Tile(selector='1:1', pos=(3, Corner.LL), width=1, height=1),
+                7: Tile(selector='1:2', pos=(4, Corner.LL), width=1, height=2),
+                8: Tile(selector='1:1', pos=(5, Corner.LL), width=1, height=1),
+                9: Tile(selector='2:1', pos=(8, Corner.UR), width=2, height=1),
+            }),
+
     'Windmill':
         Tiling (
             {
