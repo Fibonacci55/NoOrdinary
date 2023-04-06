@@ -57,10 +57,10 @@ class SvgDraw(SvgCreator):
     def create_document(self, name: str, options: DocumentOptions) -> None:
         self.name = name
         self.options = options
-        #width = self._unit(options.width)
-        #height = self._unit(options.height)
-        width = options.width
-        height = options.height
+        width = self._unit(options.width)
+        height = self._unit(options.height)
+        #width = options.width
+        #height = options.height
         self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, width, height), elements=[])
         return self.canvas
 
@@ -72,8 +72,8 @@ class SvgDraw(SvgCreator):
 
     def create_image(self, img_data : str, width : int, height: int, ulx : int, uly: int) -> object:
         #print (width, height)
-        #u = lambda x: self._unit(x)
-        u = lambda x: x
+        u = lambda x: self._unit(x)
+        #u = lambda x: x
         svg_img = svg.Image(xlink__href=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
         return svg_img
     def add_to_group(self, grp_id: int, element: object) -> None:
