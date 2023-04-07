@@ -43,7 +43,7 @@ from imagecollection import PictureImageCollection
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
-    scale = tf.ScalingTransform(factor=30)
+    scale = tf.ScalingTransform(factor=70)
     d = tf.AddDistanceTransform(distance=2)
     tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])

@@ -61,7 +61,7 @@ class SvgDraw(SvgCreator):
         height = self._unit(options.height)
         #width = options.width
         #height = options.height
-        self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, width, height), elements=[])
+        self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, width, height), width=width, height=height, elements=[])
         return self.canvas
 
     def add_to_image(self, element) -> None:

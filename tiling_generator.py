@@ -28,7 +28,7 @@ def generate(file_name: str,
              img_coll: ImageCollection):
 
     svg = create_svg_creator()
-    doc = svg.create_document(file_name, DocumentOptions(width=500, height=500, unit="mm"))
+    doc = svg.create_document(file_name, DocumentOptions(width=300, height=300, unit="mm"))
     group = svg.create_group()
     for id, tile in tiling.tiles.items():
         img_file = img_coll.next(tile.selector)
