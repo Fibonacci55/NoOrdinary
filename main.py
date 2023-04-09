@@ -39,13 +39,15 @@ def create_arg_parser():
 import tiling_factory as tf
 from tiling_generator import generate
 from imagecollection import PictureImageCollection
+from svg_gen import DocumentOptions
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
     scale = tf.ScalingTransform(factor=70)
     d = tf.AddDistanceTransform(distance=2)
-    tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
+    tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
@@ -59,4 +61,4 @@ if __name__ == '__main__':
     coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_2", selector="1:2")
 
     #print(coll.image_collection['1:1'])
-    generate("D:\\Temp\\Test.svg", tiles, coll)
+    generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
