@@ -63,3 +63,8 @@ class PictureImageCollection(ImageCollection):
     def add_directory(self, path: str, selector: str) -> None:
         #print(path)
         self.image_collection[selector] = glob.glob(path + '\*' + self.img_ext )
+
+class SvgFrameCollection(ImageCollection):
+
+    def __init__(self, ):
+        pass

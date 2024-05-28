@@ -37,7 +37,7 @@ def create_arg_parser():
 
 
 import tiling_factory as tf
-from tiling_generator import generate
+from tiling_generator import ImageTilingGenerator
 from imagecollection import PictureImageCollection
 from svg_gen import DocumentOptions
 
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     #tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
     coll = PictureImageCollection()
+    img_gen = ImageTilingGenerator()
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
@@ -61,4 +62,4 @@ if __name__ == '__main__':
     coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_2", selector="1:2")
 
     #print(coll.image_collection['1:1'])
-    generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
+    img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))

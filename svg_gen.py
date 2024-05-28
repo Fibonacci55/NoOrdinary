@@ -46,6 +46,17 @@ class SvgCreator(ABC):
 
 import svg
 
+class MyImg(svg.Image):
+
+    xlink__href: str
+
+    def __init__(self, *args, **kwargs):
+        s = kwargs['xlink__href']
+        del kwargs['xlink__href']
+        svg.Image.__init__(self, *args, **kwargs)
+        self.__dict__['xlink__href'] = s
+
+
 class SvgDraw(SvgCreator):
 
     def __init__(self):
@@ -74,7 +85,8 @@ class SvgDraw(SvgCreator):
         #print (width, height)
         u = lambda x: self._unit(x)
         #u = lambda x: x
-        svg_img = svg.Image(xlink__href=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
+        #svg_img = svg.Image(src=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
+        svg_img = MyImg(xlink__href=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
         return svg_img
     def add_to_group(self, grp_id: int, element: object) -> None:
         self.groups[grp_id].elements.append(element)
