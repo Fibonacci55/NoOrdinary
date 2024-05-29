@@ -34,7 +34,7 @@ class SvgCreator(ABC):
         """ Creates an SVG image with dimension widthxheight. upper left position at (ulx, uly) """
 
     @abstractmethod
-    def add_to_image(self, element) -> None:
+    def add_to_canvas(self, element) -> None:
         """ Adds an element to the image canvas """
 
     @abstractmethod
@@ -75,7 +75,7 @@ class SvgDraw(SvgCreator):
         self.canvas = svg.SVG(svg.ViewBoxSpec(0, 0, width, height), width=width, height=height, elements=[])
         return self.canvas
 
-    def add_to_image(self, element) -> None:
+    def add_to_canvas(self, element) -> None:
         self.canvas.elements.append(element)
     def create_group(self) -> int:
         self.groups.append(svg.G(elements=[]))

@@ -38,7 +38,8 @@ class OrderedSelector(ImageSelector):
         return v
 
 
-class ImageCollection:
+
+class TileDataCollection:
 
     def __init__(self, selection_method: ImageSelector):
         self.selection_method = selection_method
@@ -54,7 +55,7 @@ class ImageCollection:
             raise SelectorExhausted(selector)
 
 
-class PictureImageCollection(ImageCollection):
+class ImageTileDataCollection(TileDataCollection):
 
     def __init__(self, selection_method=OrderedSelector(), img_ext='.jpg'):
         super().__init__(selection_method)
@@ -64,7 +65,7 @@ class PictureImageCollection(ImageCollection):
         #print(path)
         self.image_collection[selector] = glob.glob(path + '\*' + self.img_ext )
 
-class SvgFrameCollection(ImageCollection):
+class SvgFrameCollection(TileDataCollection):
 
     def __init__(self, ):
         pass

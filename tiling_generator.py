@@ -6,21 +6,21 @@ import base64
 from math import ceil, modf
 from tile import Tile
 from svg_gen import create_svg_creator, DocumentOptions
-from imagecollection import ImageCollection
+from tiledatacollection import TileDataCollection
 from tilings import Tiling
 from abc import ABC, abstractmethod
 
 
-#def generate(file_name: str,
+#def generate(tile_data: str,
 #             tiling: Tiling,
-#             img_coll: ImageCollection,
+#             tile_data_coll: TileDataCollection,
 #             doc_options: DocumentOptions) -> None:
 #
 #    svg = create_svg_creator()
-#    doc = svg.create_document(file_name, doc_options)
+#    doc = svg.create_document(tile_data, doc_options)
 #    group = svg.create_group()
 #    for id, tile in tiling.tiles.items():
-#        img_file = img_coll.next(tile.selector)
+#        img_file = tile_data_coll.next(tile.selector)
 #        img_data = make_image_data(img_file, tile.width, tile.height)
 #        #print(len(img_data))
 #        #print(tile.width, tile.height)
@@ -35,51 +35,47 @@ from abc import ABC, abstractmethod
 #    #print(len(doc.canvas.elements))
 #    svg.add_to_image(svg.get_group(group))
 #
-#    with open(file_name, "w") as img_file:
+#    with open(tile_data, "w") as img_file:
 #        print(doc, file=img_file)
 #
 
 class TilingGenerator(ABC):
 
     @abstractmethod
-    def make_image_data(self, file_name: str, width, height):
+    def make_final_tile(self, tile_data: str, width, height, x, y):
         """Adapt image data from file"""
 
     def generate(self,
                  file_name: str,
                  tiling: Tiling,
-                 img_coll: ImageCollection,
+                 tile_data_coll: TileDataCollection,
                  doc_options: DocumentOptions) -> None:
-        svg = create_svg_creator()
-        doc = svg.create_document(file_name, doc_options)
-        group = svg.create_group()
+        self.svg = create_svg_creator()
+        doc = self.svg.create_document(file_name, doc_options)
+        group = self.svg.create_group()
         for id, tile in tiling.tiles.items():
-            img_file = img_coll.next(tile.selector)
-            img_data = self.make_image_data(img_file, tile.width, tile.height)
-            # print(len(img_data))
+            tile_data = tile_data_coll.next(tile.selector)
+            final_tile = self.make_final_tile(tile_data, tile.width, tile.height, tile.ulx, tile.uly)
+            # print(len(final_tile))
             # print(tile.width, tile.height)
-            print(tile)
-            img = svg.create_image(img_data,
-                                   tile.width,
-                                   tile.height,
-                                   tile.ulx,
-                                   tile.uly)
-            svg.add_to_group(group, img)
+            #print(tile)
+
+            self.svg.add_to_group(group, final_tile)
 
         # print(len(doc.canvas.elements))
-        svg.add_to_image(svg.get_group(group))
+        self.svg.add_to_canvas(self.svg.get_group(group))
 
-        with open(file_name, "w") as img_file:
-            print(doc, file=img_file)
+        with open(file_name, "w") as tile_data:
+            print(doc, file=tile_data)
 
 
 
 class ImageTilingGenerator(TilingGenerator):
 
-    def make_image_data(self, file_name: str, width, height):
+    def make_final_tile(self, tile_data: str, width, height, x, y):
 
-        infile = open(file_name, 'rb')
-        # print (file_name)
+        infile = open(tile_data, 'rb')
+        # print (tile_data)
         with Image(file=infile) as img:
             i_width = img.width
             i_height = img.height
@@ -101,4 +97,9 @@ class ImageTilingGenerator(TilingGenerator):
             base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
 
         img_data = "data:image/jpg;base64," + base64_data
-        return img_data
+        img = self.svg.create_image(img_data,
+                               width,
+                               height,
+                               x,
+                               y)
+        return img
