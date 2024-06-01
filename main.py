@@ -38,7 +38,7 @@ def create_arg_parser():
 
 import tiling_factory as tf
 from tiling_generator import ImageTilingGenerator
-from tiledatacollection import ImageTileDataCollection
+from tiledatacollection import ImageTileDataCollection, ord_sel_factory
 from svg_gen import DocumentOptions
 
 # Press the green button in the gutter to run the script.
@@ -51,15 +51,15 @@ if __name__ == '__main__':
     #tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
-    coll = ImageTileDataCollection()
+    coll = ImageTileDataCollection(base_path="D:\\Projects\\Baragan\\Edited\\")
     img_gen = ImageTilingGenerator()
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
     #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
     #
-    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_1", selector="1:1")
-    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\2_1", selector="2:1")
-    coll.add_directory(path="D:\\Projects\\Baragan\\Edited\\1_2", selector="1:2")
+    coll.add_selector(selector="1:1", sel_mthd_factory=ord_sel_factory)
+    coll.add_selector(selector="2:1", sel_mthd_factory=ord_sel_factory)
+    coll.add_selector(selector="1:2", sel_mthd_factory=ord_sel_factory)
 
     #print(coll.image_collection['1:1'])
     img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))

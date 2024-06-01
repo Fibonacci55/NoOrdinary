@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import random as ra
 import glob
+from typing import Callable
+import os
 
 
 class SelectorExhausted(Exception):
@@ -15,41 +17,52 @@ class InvalidSelector(Exception):
 
 class ImageSelector(ABC):
 
-    def __init__(self):
+    def __init__(self, from_list=[]):
+        self.from_list = from_list
         pass
 
     @abstractmethod
-    def __call__(self, from_list: list[str]) -> str:
+    def __call__(self) -> str:
         """ returns an image """
 
 
 class RandomSelector(ImageSelector):
 
-    def __call__(self, from_list: list[str]) -> str:
-        v = ra.choice(from_list)
-        from_list.remove(v)
+    def __call__(self) -> str:
+        v = ra.choice(self.from_list)
+        self.from_list.remove(v)
         return v
 
 
 class OrderedSelector(ImageSelector):
 
-    def __call__(self, from_list: list[str]) -> str:
-        v = from_list.pop(0)
+    def __call__(self) -> str:
+        v = self.from_list.pop(0)
         return v
 
+ord_sel_factory = lambda l: OrderedSelector(from_list=l)
+rnd_sel_factory = lambda l: RandomSelector(from_list=l)
 
 
-class TileDataCollection:
+class TileDataCollection(ABC):
 
-    def __init__(self, selection_method: ImageSelector):
-        self.selection_method = selection_method
+    def __init__(self):
+        #self.selection_method = sel_mthd_factory()
         self.image_collection = {}
 
+    @abstractmethod
+    def add_selector(self, selector: str, sel_mthd_factory: Callable) -> None:
+        """Add a selector to the collection"""
+
     def next(self, selector: str) -> str:
-        tile_list = self.image_collection[selector]
+
         try:
-            next_image = self.selection_method(tile_list)
+            tile_selector = self.image_collection[selector]
+            next_image = tile_selector()
             return next_image
+
+        except KeyError:
+            raise InvalidSelector(selector)
 
         except IndexError:
             raise SelectorExhausted(selector)
@@ -57,15 +70,23 @@ class TileDataCollection:
 
 class ImageTileDataCollection(TileDataCollection):
 
-    def __init__(self, selection_method=OrderedSelector(), img_ext='.jpg'):
-        super().__init__(selection_method)
+    def __init__(self, base_path='', img_ext='.jpg'):
+        super().__init__()
         self.img_ext = img_ext
+        self.base_path = base_path
 
-    def add_directory(self, path: str, selector: str) -> None:
-        #print(path)
-        self.image_collection[selector] = glob.glob(path + '\*' + self.img_ext )
+    def add_selector(self, selector: str, sel_mthd_factory: Callable) -> None:
+        sel = selector.replace(':', '_')
+        path = os.path.join(self.base_path, sel)
+        self.image_collection[selector] = sel_mthd_factory(glob.glob(path + '\*' + self.img_ext ))
+
 
 class SvgFrameCollection(TileDataCollection):
 
     def __init__(self, ):
         pass
+
+
+if __name__ == '__main__':
+    f = ord_sel_factory([1, 2, 3])
+    print(f())
