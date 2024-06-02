@@ -103,3 +103,26 @@ class ImageTilingGenerator(TilingGenerator):
                                x,
                                y)
         return img
+
+class SvgRectTilingGenerator(TilingGenerator):
+
+    def make_final_tile(self, tile_data: str, width, height, x, y):
+
+        try:
+            l = tile_data.split(':')
+            r_width = int(l[1])
+            r_height = int(l[0])
+        except:
+            print(tile_data)
+
+        w_factor = width // r_width
+        h_factor = height // r_height
+
+        print("make final", tile_data, width, height, r_width*w_factor, r_height*h_factor)
+
+        rect = self.svg.create_rectangle(width=r_width*w_factor,
+                                         height=r_height*h_factor,
+                                         ulx=x, uly=y)
+
+        return rect
+

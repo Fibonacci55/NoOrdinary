@@ -33,6 +33,8 @@ class SvgCreator(ABC):
     def create_image (img_file : str, width : int, height: int, ulx : int, uly: int) -> object:
         """ Creates an SVG image with dimension widthxheight. upper left position at (ulx, uly) """
 
+    def create_rectangle(self, width: int, height: int, ulx: int, uly: int):
+        """ Creates an SVG rectangle at position ulx, uly awith dimensions witdh and height """
     @abstractmethod
     def add_to_canvas(self, element) -> None:
         """ Adds an element to the image canvas """
@@ -88,6 +90,13 @@ class SvgDraw(SvgCreator):
         #svg_img = svg.Image(src=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
         svg_img = MyImg(xlink__href=img_data, x=u(ulx), y=u(uly), width=u(width), height=u(height))
         return svg_img
+
+    def create_rectangle(self, width: int, height: int, ulx: int, uly: int):
+        r = svg.Rect(width=width, height=height,
+                     x=ulx, y=uly,
+                     style="fill:none;stroke:#000000;stroke-opacity:1")
+        return r
+
     def add_to_group(self, grp_id: int, element: object) -> None:
         self.groups[grp_id].elements.append(element)
 
