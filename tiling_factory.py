@@ -77,20 +77,25 @@ class AddDistanceTransform(TilingTransformation):
         for edge in tiling.edge_list:
             cur_tile = tiling.tiles[edge[1]]
             rel_tile = tiling.tiles[edge[0]]
-            #cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos.related_corner)
             if cur_tile.pos.related_corner == Corner.UR:
-                cur_tile.ulx += self.distance
+                cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos.related_corner)
+                if cur_tile.pos.positioned_corner == Corner.UL:
+                    cur_tile.ulx += self.distance
+                    #cur_tile.uly += self.distance
+                else:
+                    cur_tile.ulx += self.distance
+                    cur_tile.uly += self.distance
             if cur_tile.pos.related_corner == Corner.LL:
                 cur_tile.uly += self.distance
             if cur_tile.pos.related_corner == Corner.LR:
                 cur_tile.ulx += self.distance
-                cur_tile.uly += self.distance
-            if cur_tile.height > cur_tile.width:
-                r = cur_tile.height // cur_tile.width - 1
-                cur_tile.height += r * self.distance
-            if cur_tile.height < cur_tile.width:
-                r = cur_tile.width // cur_tile.height  - 1
-                cur_tile.width += r * self.distance
+                #cur_tile.uly += self.distance
+            #if cur_tile.height > cur_tile.width:
+            #    r = cur_tile.height // cur_tile.width - 1
+            #    cur_tile.height += r * self.distance
+            #if cur_tile.height < cur_tile.width:
+            #    r = cur_tile.width // cur_tile.height  - 1
+            #    cur_tile.width += r * self.distance
 
         return tiling
 
