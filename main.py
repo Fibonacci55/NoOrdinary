@@ -4,20 +4,21 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import argparse
 
+
 def create_arg_parser():
     parser = argparse.ArgumentParser(
-                    prog = 'Maze',
-                    description = 'Creates mazes',
-                    epilog = ' ')
+        prog='Maze',
+        description='Creates mazes',
+        epilog=' ')
 
     parser.add_argument('-n', '--new', action="store_true", help='Create a new maze')
     parser.add_argument('-d', '--dimension', type=str,
                         dest="dimension", default='',
-                        help='Dimension of the new mask' )
+                        help='Dimension of the new mask')
 
     parser.add_argument('-m', '--apply_mask', type=str,
                         dest="mask", default='',
-                        help='Apply the mask on the maze' )
+                        help='Apply the mask on the maze')
     parser.add_argument('-s', '--save_to', type=str,
                         dest="to_file", default='',
                         help='Save a newly created maze to file')
@@ -43,26 +44,25 @@ from svg_gen import DocumentOptions
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-
     scale = tf.ScalingTransform(factor=70)
     d = tf.AddDistanceTransform(distance=5)
-    #tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
+    # tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
     tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
-    #tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
-    #tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
-    #tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
-    #tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
-    #coll = ImageTileDataCollection(base_path="D:\\Projects\\Baragan\\Edited\\")
+    # tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
+    # tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
+    # tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])
+    # tiles = tf.make_single_tiling('Basketweave', transformations=[scale, d])
+    # coll = ImageTileDataCollection(base_path="D:\\Projects\\Baragan\\Edited\\")
     coll = SvgFrameCollection()
-    #img_gen = ImageTilingGenerator()
+    # img_gen = ImageTilingGenerator()
     img_gen = SvgRectTilingGenerator()
-    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
-    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
-    #coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
     #
-    #coll.add_selector(selector="1:1", sel_mthd_factory=ord_sel_factory)
-    #coll.add_selector(selector="2:1", sel_mthd_factory=ord_sel_factory)
-    #coll.add_selector(selector="1:2", sel_mthd_factory=ord_sel_factory)
+    # coll.add_selector(selector="1:1", sel_mthd_factory=ord_sel_factory)
+    # coll.add_selector(selector="2:1", sel_mthd_factory=ord_sel_factory)
+    # coll.add_selector(selector="1:2", sel_mthd_factory=ord_sel_factory)
 
     coll.add_selector(selector="1:1", sel_mthd_factory=const_sel_factory)
     coll.add_selector(selector="2:1", sel_mthd_factory=const_sel_factory)
@@ -71,5 +71,5 @@ if __name__ == '__main__':
     coll.add_selector(selector="3:3", sel_mthd_factory=const_sel_factory)
     coll.add_selector(selector="3:2", sel_mthd_factory=const_sel_factory)
     coll.add_selector(selector="2:3", sel_mthd_factory=const_sel_factory)
-    #print(coll.image_collection['1:1'])
+    # print(coll.image_collection['1:1'])
     img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))

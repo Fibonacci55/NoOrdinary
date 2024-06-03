@@ -1,7 +1,7 @@
 import math
 
-import svgwrite
-from wand.image import Image
+#import svgwrite
+#from wand.image import Image
 import base64
 from math import ceil, modf
 from tile import Tile
@@ -70,39 +70,40 @@ class TilingGenerator(ABC):
 
 
 
-class ImageTilingGenerator(TilingGenerator):
+#class ImageTilingGenerator(TilingGenerator):
+#
+#    def make_final_tile(self, tile_data: str, width, height, x, y):
+#
+#        infile = open(tile_data, 'rb')
+#        # print (tile_data)
+#        with Image(file=infile) as img:
+#            i_width = img.width
+#            i_height = img.height
+#            if width > height:
+#                f, r = math.modf(width / height)
+#                print('F', f, r)
+#                i_width = math.ceil((1.0 + f) * i_width)
+#            else:
+#                f, r = math.modf(height / width)
+#                # i_height *= math.ceil(1.0 + (f))
+#                print('F', f, r)
+#                i_height = math.ceil((1.0 + f) * i_height)
+#            print(r)
+#            print('width', i_width, img.width)
+#            print('height', i_height, img.height)
 
-    def make_final_tile(self, tile_data: str, width, height, x, y):
-
-        infile = open(tile_data, 'rb')
-        # print (tile_data)
-        with Image(file=infile) as img:
-            i_width = img.width
-            i_height = img.height
-            if width > height:
-                f, r = math.modf(width / height)
-                print('F', f, r)
-                i_width = math.ceil((1.0 + f) * i_width)
-            else:
-                f, r = math.modf(height / width)
-                # i_height *= math.ceil(1.0 + (f))
-                print('F', f, r)
-                i_height = math.ceil((1.0 + f) * i_height)
-            print(r)
-            print('width', i_width, img.width)
-            print('height', i_height, img.height)
-
-            img.liquid_rescale(i_width, i_height)
-            # img.liquid_rescale(img.width, img.height)
-            base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
-
-        img_data = "data:image/jpg;base64," + base64_data
-        img = self.svg.create_image(img_data,
-                               width,
-                               height,
-                               x,
-                               y)
-        return img
+#            img.liquid_rescale(i_width, i_height)
+#            # img.liquid_rescale(img.width, img.height)
+#            base64_data = base64.b64encode(img.make_blob()).decode('ASCII')
+#
+#        img_data = "data:image/jpg;base64," + base64_data
+#        img = self.svg.create_image(img_data,
+#                               width,
+#                               height,
+#                               x,
+#                               y)
+#        return img
+#
 
 class SvgRectTilingGenerator(TilingGenerator):
 

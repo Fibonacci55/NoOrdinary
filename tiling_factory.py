@@ -44,7 +44,7 @@ class MoveTransform(TilingTransformation):
     def __init__(self, to_pos: Position):
         self.to_pos = to_pos
 
-    def transform(self, tiling : Tiling) -> Tiling:
+    def transform(self, tiling: Tiling) -> Tiling:
 
         for tile in tiling.tiles:
             tile.ulx += self.to_pos.x
@@ -77,12 +77,12 @@ class AddDistanceTransform(TilingTransformation):
         for edge in tiling.edge_list:
             cur_tile = tiling.tiles[edge[1]]
             rel_tile = tiling.tiles[edge[0]]
-            cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos[1])
-            if cur_tile.pos[1] == Corner.UR:
+            #cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos.related_corner)
+            if cur_tile.pos.related_corner == Corner.UR:
                 cur_tile.ulx += self.distance
-            if cur_tile.pos[1] == Corner.LL:
+            if cur_tile.pos.related_corner == Corner.LL:
                 cur_tile.uly += self.distance
-            if cur_tile.pos[1] == Corner.LR:
+            if cur_tile.pos.related_corner == Corner.LR:
                 cur_tile.ulx += self.distance
                 cur_tile.uly += self.distance
             if cur_tile.height > cur_tile.width:

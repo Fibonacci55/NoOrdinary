@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from wand.image import Image
-import base64
+#from wand.image import Image
+#import base64
 from math import floor
 import urllib
 

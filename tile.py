@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from tile_common import Position, Corner, BoundingBox
+from tile_common import Positioning, Corner, BoundingBox
 
 
 @dataclass
@@ -10,7 +10,8 @@ class Tile:
     width: float = 0.0
     height: float = 0.0
     selector: str = ''
-    pos: tuple[int, Corner] = (None, None)
+    pos: Positioning = None
+    #pos: tuple[int, Corner, Corner] = (None, None, None)
 
     def corner(self, which):
         if which == Corner.UL:

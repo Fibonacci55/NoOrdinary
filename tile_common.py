@@ -8,8 +8,9 @@ class Position:
         Position in "normalized" ccordinates where to put the
         respective tile
     """
-    x : int
-    y : int
+    x: int
+    y: int
+
 
 class Corner(Enum):
     """
@@ -36,3 +37,13 @@ class BoundingBox:
         return "({0}, {1}) / ({2}, {3})".format(self.ulx, self.uly, self.lry, self.lry)
 
 
+@dataclass
+class Positioning:
+    related_tile: int
+    related_corner: Corner
+    positioned_corner: Corner = Corner.UL
+
+#    def __init__(self, related_tile:int, related_corner: Corner, positioned_corner: Corner=Corner.UL):
+#       self.related_tile = related_tile
+#       self.related_corner = related_corner,
+#       self.positioned_corner = positioned_corner

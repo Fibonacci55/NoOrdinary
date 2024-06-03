@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 from tile_common import Corner
 import tiling_factory as tf
+from tiling_generator import SvgRectTilingGenerator
+from tiledatacollection import const_sel_factory, SvgFrameCollection
+from svg_gen import DocumentOptions
 
 from tilings import Tiling
 from tile import Tile
@@ -29,28 +32,29 @@ class E(D):
 if __name__ == '__main__':
     pass
 
-#    t = Tiling(
-#    {
-#        1: Tile(selector='2:1', ulx=0, uly=0, width=2, height=1),
-#        2: Tile(selector='1:1', pos=(2, 1, Corner.UR), width=1, height=1),
-#        3: Tile(selector='1:2', width=1, height=2),
-#        4: Tile(selector='1:1', width=1, height=1),
-#        5: Tile(selector='1:1', width=1, height=1),
-#        6: Tile(selector='1:1', width=1, height=1),
-#        7: Tile(selector='1:2', width=1, height=2),
-#        8: Tile(selector='1:1', width=1, height=1),
-#        9: Tile(selector='1:1', width=1, height=1),
-#        10: Tile(selector='1:1',width=1, height=1),
-#        11: Tile(selector='2:1',width=2, height=1),
-#        12: Tile(selector='1:1', width=1, height=1),
-#    },
-#    [
-#        , (3, 2, Corner.UR),
-#        (1, 4, Corner.LL), (5, 5, Corner.UR), (6, 5, Corner.UR),
-#        (7, 4, Corner.LL), (8, 7, Corner.UR), (9, 8, Corner.UR), (10, 9, Corner.UR),
-#        (11, 8, Corner.LL), (12,11, Corner.UR)
-#    ]
-#    )
-#
-    e = E(a=1, b=1, x='xxx')
-    print(e, type(e))
+    scale = tf.ScalingTransform(factor=70)
+    d = tf.AddDistanceTransform(distance=5)
+    # tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
+    #t = Tile(selector='2:1', pos=(1, Corner.LR, Corner.LL), width=2, height=1),
+    tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Roman_5', transformations=[scale])
+    coll = SvgFrameCollection()
+    # img_gen = ImageTilingGenerator()
+    img_gen = SvgRectTilingGenerator()
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_1", selector="1:1")
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\2_1", selector="2:1")
+    # coll.add_directory(path="D:\\Projects\\NoOrdinaryEyes\\1_2", selector="1:2")
+    #
+    # coll.add_selector(selector="1:1", sel_mthd_factory=ord_sel_factory)
+    # coll.add_selector(selector="2:1", sel_mthd_factory=ord_sel_factory)
+    # coll.add_selector(selector="1:2", sel_mthd_factory=ord_sel_factory)
+
+    coll.add_selector(selector="1:1", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="2:1", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="1:2", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="2:2", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="3:3", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="3:2", sel_mthd_factory=const_sel_factory)
+    coll.add_selector(selector="2:3", sel_mthd_factory=const_sel_factory)
+    # print(coll.image_collection['1:1'])
+    img_gen.generate("C:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
