@@ -57,4 +57,4 @@ if __name__ == '__main__':
     coll.add_selector(selector="3:2", sel_mthd_factory=const_sel_factory)
     coll.add_selector(selector="2:3", sel_mthd_factory=const_sel_factory)
     # print(coll.image_collection['1:1'])
-    img_gen.generate("C:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
+    img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
