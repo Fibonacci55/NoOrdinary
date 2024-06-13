@@ -111,13 +111,13 @@ class SvgRectTilingGenerator(TilingGenerator):
 
         try:
             l = tile_data.split(':')
-            r_width = int(l[1])
-            r_height = int(l[0])
+            r_width = width #int(l[1])
+            r_height = height #int(l[0])
         except:
             print(tile_data)
 
-        w_factor = width // r_width
-        h_factor = height // r_height
+        w_factor = 1 #width // r_width
+        h_factor = 1 #height // r_height
 
         print("make final", tile_data, width, height, r_width*w_factor, r_height*h_factor)
 

@@ -36,7 +36,8 @@ if __name__ == '__main__':
     d = tf.AddDistanceTransform(distance=5)
     # tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
     #t = Tile(selector='2:1', pos=(1, Corner.LR, Corner.LL), width=2, height=1),
-    tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
+    tiles = tf.make_single_tiling('Roman_50', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Roman_50', transformations=[scale])
     #tiles = tf.make_single_tiling('Roman_5', transformations=[scale])
     coll = SvgFrameCollection()
     # img_gen = ImageTilingGenerator()

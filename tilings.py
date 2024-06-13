@@ -24,17 +24,22 @@ class Tiling:
             if cur_tile.pos.positioned_corner == Corner.UL:
                 cur_tile.ulx, cur_tile.uly = rel_tile.corner(cur_tile.pos.related_corner)
             elif cur_tile.pos.positioned_corner == Corner.LL:
-                print('position to', cur_tile.pos.positioned_corner)
+                #print('position to', cur_tile.pos.positioned_corner)
                 ll_x, ll_y = rel_tile.corner(cur_tile.pos.related_corner)
                 cur_tile.ulx = ll_x
                 cur_tile.uly = ll_y - cur_tile.height
             elif cur_tile.pos.positioned_corner == Corner.LR:
-                print('position to', cur_tile.pos.positioned_corner)
+                #print('position to', cur_tile.pos.positioned_corner)
                 ur_x, ur_y = rel_tile.corner(cur_tile.pos.related_corner)
                 cur_tile.ulx = ur_x - cur_tile.width
                 cur_tile.uly = ur_y - cur_tile.height
             else:
-                raise AttributeError
+                print('position toi UR', cur_tile.pos.positioned_corner)
+                ur_x, ur_y = rel_tile.corner(cur_tile.pos.related_corner)
+                cur_tile.ulx = ur_x - cur_tile.width
+                cur_tile.uly = ur_y
+                print(ur_x, ur_y, cur_tile.ulx, cur_tile.uly)
+
 
         print(self.tiles)
 
@@ -106,7 +111,46 @@ tilings = {
             9: Tile(selector='2:2', pos=Positioning(6, Corner.UR), width=2, height=2),
             10: Tile(selector='1:1', pos=Positioning(5, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
         }),
-#    'Cobbiesstone_90' :
+
+    'Roman_50':
+        Tiling(
+            {
+                1: Tile(selector='2:2', ulx=0, uly=0, width=2, height=2),
+                2: Tile(selector='2:1', pos=Positioning(1, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
+                3: Tile(selector='1:2', pos=Positioning(1, Corner.LL), width=1, height=2),
+                4: Tile(selector='3:3', pos=Positioning(3, Corner.UR), width=3, height=3),
+                5: Tile(selector='2:3', pos=Positioning(2, Corner.UR), width=2, height=3),
+                6: Tile(selector='1:1', pos=Positioning(5, Corner.LL), width=1, height=1),
+                7: Tile(selector='1:1', pos=Positioning(4, Corner.LL), width=1, height=1),
+                8: Tile(selector='3:2', pos=Positioning(7, Corner.UR), width=3, height=2),
+                9: Tile(selector='2:2', pos=Positioning(6, Corner.UR), width=2, height=2),
+                10: Tile(selector='1:1', pos=Positioning(5, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
+
+                11: Tile(selector='2:2', pos=Positioning(10, Corner.UR), width=2, height=2),
+                12: Tile(selector='2:1', pos=Positioning(11, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
+                13: Tile(selector='1:2', pos=Positioning(11, Corner.LL), width=1, height=2),
+                14: Tile(selector='3:3', pos=Positioning(13, Corner.UR), width=3, height=3),
+                15: Tile(selector='2:3', pos=Positioning(12, Corner.UR), width=2, height=3),
+                16: Tile(selector='1:1', pos=Positioning(15, Corner.LL), width=1, height=1),
+                17: Tile(selector='1:1', pos=Positioning(14, Corner.LL), width=1, height=1),
+                18: Tile(selector='3:2', pos=Positioning(17, Corner.UR), width=3, height=2),
+                19: Tile(selector='2:2', pos=Positioning(16, Corner.UR), width=2, height=2),
+                20: Tile(selector='1:1', pos=Positioning(15, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
+
+                21: Tile(selector='2:2', pos=Positioning(7,  Corner.LR, positioned_corner=Corner.UR), width=2, height=2),
+                22: Tile(selector='2:1', pos=Positioning(21, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
+                23: Tile(selector='1:2', pos=Positioning(21, Corner.LL), width=1, height=2),
+                24: Tile(selector='3:3', pos=Positioning(23, Corner.UR), width=3, height=3),
+                25: Tile(selector='2:3', pos=Positioning(22, Corner.UR), width=2, height=3),
+                26: Tile(selector='1:1', pos=Positioning(25, Corner.LL), width=1, height=1),
+                27: Tile(selector='1:1', pos=Positioning(24, Corner.LL), width=1, height=1),
+                28: Tile(selector='3:2', pos=Positioning(27, Corner.UR), width=3, height=2),
+                29: Tile(selector='2:2', pos=Positioning(26, Corner.UR), width=2, height=2),
+                30: Tile(selector='1:1', pos=Positioning(25, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
+
+            }),
+
+    #    'Cobbiesstone_90' :
 #        Tiling (
 #{
 #            1: Tile(selector='1:2', ulx=0, uly=0, width=1, height=2),

@@ -61,6 +61,8 @@ class AddDistanceTransform(TilingTransformation):
 
     def transform(self, tiling: Tiling) -> Tiling:
 
+        print("In AddDistanceTransform", self.distance)
+
         if self.x_shifted:
             tiling.tiles[1].ulx += self.distance
         if self.y_shifted:
@@ -94,8 +96,12 @@ class AddDistanceTransform(TilingTransformation):
                     cur_tile.uly = lly + self.distance
             if cur_tile.pos.related_corner == Corner.LR:
                 lrx, lry = rel_tile.corner(Corner.LR)
-                cur_tile.ulx = lrx + self.distance
-                cur_tile.uly = lry - cur_tile.height
+                if cur_tile.pos.positioned_corner == Corner.UR:
+                    cur_tile.ulx = lrx - cur_tile.width
+                    cur_tile.uly = lry + self.distance
+                else:
+                    cur_tile.ulx = lrx + self.distance
+                    cur_tile.uly = lry - cur_tile.height
             #if cur_tile.height > cur_tile.width:
             #    r = cur_tile.height // cur_tile.width - 1
             #    cur_tile.height += r * self.distance

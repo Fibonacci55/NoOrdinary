@@ -46,8 +46,9 @@ from svg_gen import DocumentOptions
 if __name__ == '__main__':
     scale = tf.ScalingTransform(factor=70)
     d = tf.AddDistanceTransform(distance=5)
-    # tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
-    tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Cobbiesstone_90', transformations=[scale, d])
+    #tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
+    tiles = tf.make_single_tiling('Roman_5', transformations=[scale])
     # tiles = tf.make_single_tiling('Pine_Heel', transformations=[scale, d])
     # tiles = tf.make_single_tiling('Pine_Heel_1', transformations=[scale, d])
     # tiles = tf.make_single_tiling('Windmill', transformations=[scale, d])

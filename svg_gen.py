@@ -92,9 +92,18 @@ class SvgDraw(SvgCreator):
         return svg_img
 
     def create_rectangle(self, width: int, height: int, ulx: int, uly: int):
-        r = svg.Rect(width=width, height=height,
-                     x=ulx, y=uly,
-                     style="fill:none;stroke:#000000;stroke-opacity:1")
+        #r = svg.Rect(width=width, height=height,
+        #             x=ulx, y=uly,
+        #             style="fill:none;stroke:#000000;stroke-opacity:1")
+
+        r = svg.Path(
+            d=[svg.MoveTo(ulx, uly),
+               svg.LineTo(ulx+width, uly),
+               svg.LineTo(ulx+width, uly+height),
+               svg.LineTo(ulx, uly+height),
+               svg.ClosePath()],
+            style="fill:none;stroke:#000000;stroke-opacity:1")
+
         return r
 
     def add_to_group(self, grp_id: int, element: object) -> None:
