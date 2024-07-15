@@ -38,7 +38,7 @@ if __name__ == '__main__':
     #t = Tile(selector='2:1', pos=(1, Corner.LR, Corner.LL), width=2, height=1),
     tiles = tf.make_single_tiling('Roman_50', transformations=[scale, d])
     #tiles = tf.make_single_tiling('Roman_50', transformations=[scale])
-    #tiles = tf.make_single_tiling('Roman_5', transformations=[scale])
+    #tiles = tf.make_single_tiling('Roman_5', transformations=[scale, d])
     coll = SvgFrameCollection()
     # img_gen = ImageTilingGenerator()
     img_gen = SvgRectTilingGenerator()
@@ -58,4 +58,5 @@ if __name__ == '__main__':
     coll.add_selector(selector="3:2", sel_mthd_factory=const_sel_factory)
     coll.add_selector(selector="2:3", sel_mthd_factory=const_sel_factory)
     # print(coll.image_collection['1:1'])
-    img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
+    #img_gen.generate("D:\\Temp\\Test.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))
+    img_gen.generate("D:\\Temp\\Yogi\\roman_50.svg", tiles, coll, DocumentOptions(width=300, height=300, unit="mm"))

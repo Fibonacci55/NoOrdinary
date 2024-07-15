@@ -63,9 +63,19 @@ class SvgDraw(SvgCreator):
 
     def __init__(self):
         self.groups = []
+        self.ids = {}
 
     def _unit(self, dim):
         return "%s%s" % (dim, self.options.unit)
+
+    def _id(self, element):
+        if element in self.ids:
+            self.ids[element] += 1
+            next_id = '%s-%s' % (element, self.ids[element])
+        else:
+            next_id = '%s-0' % element
+            self.ids[element] = 0
+        return next_id
 
     def create_document(self, name: str, options: DocumentOptions) -> None:
         self.name = name
@@ -80,8 +90,8 @@ class SvgDraw(SvgCreator):
     def add_to_canvas(self, element) -> None:
         self.canvas.elements.append(element)
     def create_group(self) -> int:
-        self.groups.append(svg.G(elements=[]))
-        return len(self.groups) - 1
+       self.groups.append(svg.G(elements=[], id=self._id("group")))
+       return len(self.groups) - 1
 
     def create_image(self, img_data : str, width : int, height: int, ulx : int, uly: int) -> object:
         #print (width, height)
@@ -98,11 +108,12 @@ class SvgDraw(SvgCreator):
 
         r = svg.Path(
             d=[svg.MoveTo(ulx, uly),
-               svg.LineTo(ulx+width, uly),
-               svg.LineTo(ulx+width, uly+height),
-               svg.LineTo(ulx, uly+height),
+               svg.HorizontalLineToRel(width),
+               svg.VerticalLineToRel(height),
+               svg.HorizontalLineToRel(-width),
                svg.ClosePath()],
-            style="fill:none;stroke:#000000;stroke-opacity:1")
+            style="fill:none;stroke:#000000;stroke-opacity:1",
+            id=self._id("path"))
 
         return r
 
