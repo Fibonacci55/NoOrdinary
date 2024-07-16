@@ -5,6 +5,7 @@ from tile_common import Positioning, Corner, BoundingBox
 @dataclass
 class Tile:
 
+    id: int
     ulx: float = 0.0
     uly: float = 0.0
     width: float = 0.0
@@ -17,13 +18,13 @@ class Tile:
         if which == Corner.UL:
             return self.ulx, self.uly
         elif which == Corner.LL:
-            print(self.ulx, self.uly+self.height)
+            #print(self.ulx, self.uly+self.height)
             return self.ulx, self.uly+self.height
         elif which == Corner.LR:
-            print(self.ulx + self.width, self.uly + self.height)
+            #print(self.ulx + self.width, self.uly + self.height)
             return self.ulx + self.width, self.uly + self.height
         else:
-            print(self.ulx+self.width, self.uly)
+            #print(self.ulx+self.width, self.uly)
             return self.ulx+self.width, self.uly
 
     @property
