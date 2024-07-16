@@ -164,6 +164,13 @@ tilings = {
                 39: Tile(id=39, selector='2:2', pos=Positioning(36, Corner.UR), width=2, height=2),
                 40: Tile(id=40, selector='1:1', pos=Positioning(35, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
 
+                41: Tile(id=21, selector='2:2', pos=Positioning(27, Corner.LR, positioned_corner=Corner.UR), width=2,
+                         height=2),
+                42: Tile(id=22, selector='2:1', pos=Positioning(41, Corner.LR, positioned_corner=Corner.LL), width=2,
+                         height=1),
+                44: Tile(id=24, selector='3:3', pos=Positioning(42, Corner.LR, positioned_corner=Corner.UR), width=3, height=3),
+                45: Tile(id=25, selector='2:3', pos=Positioning(42, Corner.UR), width=2, height=3),
+
             }),
 
     #    'Cobbiesstone_90' :
