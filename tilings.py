@@ -170,6 +170,13 @@ tilings = {
                          height=1),
                 44: Tile(id=24, selector='3:3', pos=Positioning(42, Corner.LR, positioned_corner=Corner.UR), width=3, height=3),
                 45: Tile(id=25, selector='2:3', pos=Positioning(42, Corner.UR), width=2, height=3),
+                50: Tile(id=30, selector='1:1', pos=Positioning(45, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
+
+                51: Tile(id=51, selector='2:2', pos=Positioning(50, Corner.UR), width=2, height=2),
+                52: Tile(id=52, selector='2:1', pos=Positioning(51, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
+                53: Tile(id=53, selector='1:2', pos=Positioning(51, Corner.LL), width=1, height=2),
+                54: Tile(id=54, selector='3:3', pos=Positioning(53, Corner.UR), width=3, height=3),
+                55: Tile(id=55, selector='2:3', pos=Positioning(52, Corner.UR), width=2, height=3),
 
             }),
 

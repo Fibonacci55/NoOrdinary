@@ -73,8 +73,8 @@ class SvgDraw(SvgCreator):
             self.ids[element] += 1
             next_id = '%s-%s' % (element, self.ids[element])
         else:
-            next_id = '%s-0' % element
-            self.ids[element] = 0
+            next_id = '%s-1' % element
+            self.ids[element] = 1
         return next_id
 
     def create_document(self, name: str, options: DocumentOptions) -> None:
