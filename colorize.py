@@ -4,9 +4,9 @@ from tile import Tile
 
 
 c_map = {
-    0: '#AC2727',
-    1: '#243A73',
-    2: '#ACAB27',
+    0: '#FFC0A0',
+    1: '#85B6CD',
+    2: '#FFFFA0',
     3: '#1F932D'
 }
 
@@ -59,7 +59,7 @@ def adjacent(x: Tile, y: Tile) -> bool:
 def colorize(col_g: any, excalidrawPic: dict, color_map: dict):
 
 
-    color_dict = nx.coloring.greedy_color(col_g, strategy="largest_first")
+    color_dict = nx.coloring.greedy_color(col_g, strategy="independent_set")
     print(color_dict)
 
     elements = excalidrawPic['elements']
@@ -70,7 +70,7 @@ def colorize(col_g: any, excalidrawPic: dict, color_map: dict):
             #print(elem)
 
             try:
-                no = int(elem['id'].split('-')[1]) + 1
+                no = int(elem['id'].split('-')[1])
                 # print(no)
                 # print(color_dict[no])
                 color = color_map[color_dict[no]]

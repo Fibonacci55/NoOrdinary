@@ -49,23 +49,82 @@ class Tiling:
 
 
 tilings = {
-#    'Pine_Heel':
-#        Tiling(
-#        {
-#            1: Tile(selector='2:1', ulx=0, uly=0, width=2, height=1),
-#            2: Tile(selector='1:1', pos=(1, Corner.UR), width=1, height=1),
-#            3: Tile(selector='1:2', pos=(2, Corner.UR), width=1, height=2),
-#            4: Tile(selector='1:1', pos=(1, Corner.LL), width=1, height=1),
-#            5: Tile(selector='1:1', pos=(4, Corner.UR), width=1, height=1),
-#            6: Tile(selector='1:1', pos=(5, Corner.UR), width=1, height=1),
-#            7: Tile(selector='1:2', pos=(4, Corner.LL), width=1, height=2),
-#            8: Tile(selector='1:1', pos=(7, Corner.UR), width=1, height=1),
-#            9: Tile(selector='1:1', pos=(8, Corner.UR), width=1, height=1),
-#            10: Tile(selector='1:1', pos=(9, Corner.UR), width=1, height=1),
-#            11: Tile(selector='1:1', pos=(8, Corner.LL), width=1, height=1),
-#            12: Tile(selector='2:1', pos=(11, Corner.UR), width=2, height=1),
-#        }),
-#    'Pine_Heel_1':
+    'Pine_Heel':
+        Tiling(
+        {
+            1: Tile(id=1, selector='2:1', ulx=0, uly=0, width=2, height=1),
+            2: Tile(id=2, selector='1:1', pos=Positioning(1, Corner.UR), width=1, height=1),
+            3: Tile(id=3, selector='1:2', pos=Positioning(2, Corner.UR), width=1, height=2),
+            4: Tile(id=4, selector='1:1', pos=Positioning(1, Corner.LL), width=1, height=1),
+            5: Tile(id=5, selector='1:1', pos=Positioning(4, Corner.UR), width=1, height=1),
+            6: Tile(id=6, selector='1:1', pos=Positioning(5, Corner.UR), width=1, height=1),
+            7: Tile(id=7, selector='1:2', pos=Positioning(4, Corner.LL), width=1, height=2),
+            8: Tile(id=8, selector='1:1', pos=Positioning(7, Corner.UR), width=1, height=1),
+            9: Tile(id=9, selector='1:1', pos=Positioning(8, Corner.UR), width=1, height=1),
+            10: Tile(id=10, selector='1:1', pos=Positioning(9, Corner.UR), width=1, height=1),
+            11: Tile(id=11, selector='1:1', pos=Positioning(8, Corner.LL), width=1, height=1),
+            12: Tile(id=12, selector='2:1', pos=Positioning(11, Corner.UR), width=2, height=1),
+        }),
+    'Prague':
+        Tiling(
+            {
+                1: Tile(id=1, selector='2:1', ulx=0, uly=0, width=2, height=1),
+                2: Tile(id=2, selector='1:1', pos=Positioning(1, Corner.UR), width=1, height=1),
+                3: Tile(id=3, selector='1:2', pos=Positioning(2, Corner.UR), width=1, height=2),
+                4: Tile(id=4, selector='1:1', pos=Positioning(1, Corner.LL), width=1, height=1),
+                5: Tile(id=5, selector='1:1', pos=Positioning(4, Corner.UR), width=2, height=2),
+                #6: Tile(id=6, selector='1:1', pos=Positioning(5, Corner.UR), width=1, height=1),
+                7: Tile(id=7, selector='1:2', pos=Positioning(4, Corner.LL), width=1, height=2),
+                #8: Tile(id=8, selector='1:1', pos=Positioning(7, Corner.UR), width=1, height=1),
+                #9: Tile(id=9, selector='1:1', pos=Positioning(8, Corner.UR), width=1, height=1),
+                #10: Tile(id=10, selector='1:1', pos=Positioning(9, Corner.UR), width=1, height=1),
+                10: Tile(id=10, selector='1:1', pos=Positioning(5, Corner.LR, positioned_corner=Corner.LL), width=1, height=1),
+                11: Tile(id=11, selector='1:1', pos=Positioning(5, Corner.LL), width=1, height=1),
+                12: Tile(id=12, selector='2:1', pos=Positioning(11, Corner.UR), width=2, height=1),
+
+                #13: Tile(id=2, selector='2:1', pos=Positioning(3, Corner.UR), width=2, height=1),
+                #14: Tile(id=2, selector='1:1', pos=Positioning(13, Corner.UR), width=1, height=1),
+                #15: Tile(id=3, selector='1:2', pos=Positioning(14, Corner.UR), width=1, height=2),
+                #16: Tile(id=4, selector='1:1', pos=Positioning(13, Corner.LL), width=1, height=1),
+                #17: Tile(id=5, selector='1:1', pos=Positioning(16, Corner.UR), width=1, height=1),
+                #18: Tile(id=6, selector='1:1', pos=Positioning(17, Corner.UR), width=1, height=1),
+                #19: Tile(id=7, selector='1:2', pos=Positioning(16, Corner.LL), width=1, height=2),
+                #20: Tile(id=8, selector='1:1', pos=Positioning(19, Corner.UR), width=1, height=1),
+                #21: Tile(id=9, selector='1:1', pos=Positioning(20, Corner.UR), width=1, height=1),
+                #22: Tile(id=10, selector='1:1', pos=Positioning(21, Corner.UR), width=1, height=1),
+                #23: Tile(id=11, selector='1:1', pos=Positioning(20, Corner.LL), width=1, height=1),
+                #24: Tile(id=12, selector='2:1', pos=Positioning(23, Corner.UR), width=2, height=1),
+
+#                25: Tile(id=2, selector='2:1', pos=Positioning(7, Corner.LL), width=2, height=1),
+#                26: Tile(id=2, selector='1:1', pos=Positioning(25, Corner.UR), width=1, height=1),
+#                27: Tile(id=3, selector='1:2', pos=Positioning(26, Corner.UR), width=1, height=2),
+#                28: Tile(id=4, selector='1:1', pos=Positioning(25, Corner.LL), width=1, height=1),
+#                29: Tile(id=5, selector='1:1', pos=Positioning(28, Corner.UR), width=2, height=2),
+#                #30: Tile(id=6, selector='1:1', pos=Positioning(29, Corner.UR), width=1, height=1),
+#                31: Tile(id=7, selector='1:2', pos=Positioning(28, Corner.LL), width=1, height=2),
+#                #32: Tile(id=8, selector='1:1', pos=Positioning(31, Corner.UR), width=1, height=1),
+#                #33: Tile(id=9, selector='1:1', pos=Positioning(32, Corner.UR), width=1, height=1),
+#                #34: Tile(id=10, selector='1:1', pos=Positioning(33, Corner.UR), width=1, height=1),
+#                34: Tile(id=10, selector='1:1', pos=Positioning(29, Corner.LR, positioned_corner=Corner.LL), width=1, height=1),
+#                35: Tile(id=11, selector='1:1', pos=Positioning(29, Corner.LL), width=1, height=1),
+#                36: Tile(id=12, selector='2:1', pos=Positioning(35, Corner.UR), width=2, height=1),
+#
+#                37: Tile(id=2, selector='2:1', pos=Positioning(27, Corner.UR), width=2, height=1),
+#                38: Tile(id=2, selector='1:1', pos=Positioning(37, Corner.UR), width=1, height=1),
+#                39: Tile(id=3, selector='1:2', pos=Positioning(38, Corner.UR), width=1, height=2),
+#                40: Tile(id=4, selector='1:1', pos=Positioning(37, Corner.LL), width=1, height=1),
+#                41: Tile(id=5, selector='1:1', pos=Positioning(40, Corner.UR), width=2, height=2),
+#                #42: Tile(id=6, selector='1:1', pos=Positioning(41, Corner.UR), width=1, height=1),
+#                43: Tile(id=7, selector='1:2', pos=Positioning(40, Corner.LL), width=1, height=2),
+#                #44: Tile(id=8, selector='1:1', pos=Positioning(43, Corner.UR), width=1, height=1),
+#                #45: Tile(id=9, selector='1:1', pos=Positioning(44, Corner.UR), width=1, height=1),
+#                #46: Tile(id=10, selector='1:1', pos=Positioning(45, Corner.UR), width=1, height=1),
+#                46: Tile(id=10, selector='1:1', pos=Positioning(41, Corner.LR, positioned_corner=Corner.LL), width=1, height=1),
+#                47: Tile(id=11, selector='1:1', pos=Positioning(41, Corner.LL), width=1, height=1),
+#                48: Tile(id=12, selector='2:1', pos=Positioning(47, Corner.UR), width=2, height=1),
+            }),
+
+    #    'Pine_Heel_1':
 #        Tiling(
 #            {
 #                1: Tile(selector='2:1', ulx=0, uly=0, width=2, height=1),
@@ -164,19 +223,19 @@ tilings = {
                 39: Tile(id=39, selector='2:2', pos=Positioning(36, Corner.UR), width=2, height=2),
                 40: Tile(id=40, selector='1:1', pos=Positioning(35, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
 
-                41: Tile(id=21, selector='2:2', pos=Positioning(27, Corner.LR, positioned_corner=Corner.UR), width=2,
+                41: Tile(id=41, selector='2:2', pos=Positioning(27, Corner.LR, positioned_corner=Corner.UR), width=2,
                          height=2),
-                42: Tile(id=22, selector='2:1', pos=Positioning(41, Corner.LR, positioned_corner=Corner.LL), width=2,
+                42: Tile(id=42, selector='2:1', pos=Positioning(41, Corner.LR, positioned_corner=Corner.LL), width=2,
                          height=1),
-                44: Tile(id=24, selector='3:3', pos=Positioning(42, Corner.LR, positioned_corner=Corner.UR), width=3, height=3),
-                45: Tile(id=25, selector='2:3', pos=Positioning(42, Corner.UR), width=2, height=3),
-                50: Tile(id=30, selector='1:1', pos=Positioning(45, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
+                44: Tile(id=43, selector='3:3', pos=Positioning(42, Corner.LR, positioned_corner=Corner.UR), width=3, height=3),
+                45: Tile(id=44, selector='2:3', pos=Positioning(42, Corner.UR), width=2, height=3),
+                50: Tile(id=45, selector='1:1', pos=Positioning(45, Corner.UR, positioned_corner=Corner.LR), width=1, height=1),
 
-                51: Tile(id=51, selector='2:2', pos=Positioning(50, Corner.UR), width=2, height=2),
-                52: Tile(id=52, selector='2:1', pos=Positioning(51, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
-                53: Tile(id=53, selector='1:2', pos=Positioning(51, Corner.LL), width=1, height=2),
-                54: Tile(id=54, selector='3:3', pos=Positioning(53, Corner.UR), width=3, height=3),
-                55: Tile(id=55, selector='2:3', pos=Positioning(52, Corner.UR), width=2, height=3),
+                51: Tile(id=46, selector='2:2', pos=Positioning(50, Corner.UR), width=2, height=2),
+                52: Tile(id=47, selector='2:1', pos=Positioning(51, Corner.LR, positioned_corner=Corner.LL), width=2, height=1),
+                53: Tile(id=48, selector='1:2', pos=Positioning(51, Corner.LL), width=1, height=2),
+                54: Tile(id=49, selector='3:3', pos=Positioning(53, Corner.UR), width=3, height=3),
+                55: Tile(id=50, selector='2:3', pos=Positioning(52, Corner.UR), width=2, height=3),
 
             }),
 
