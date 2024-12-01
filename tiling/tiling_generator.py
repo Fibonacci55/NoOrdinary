@@ -1,13 +1,8 @@
-
-import svgwrite
-from math import floor
 from wand.image import Image
 import base64
-from abc import ABC, abstractmethod
-import svg_gen as svg
 from tile import Tile
 from svg_gen import create_svg_creator, DocumentOptions
-from imagecollection import ImageCollection
+from tiling.imagecollection import ImageCollection
 
 def make_image_data(file_name: str):
 

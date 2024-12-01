@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "tiling"
+version = "0.1.0"
+description = "This package creates tiling of images"
+authors = ["Fibonacci55 <erik.margraf@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+Wand = "^0.6.13"
+svgwrite = "^1.4.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
